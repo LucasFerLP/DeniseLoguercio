@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-14T00:00:00Z",
+  "title": "Design System: Denise Lo Guercio — Portfolio de Arte",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Cool Paper White", "canonical": "#f6f7f6" },
+      "paper-line": { "role": "neutral", "displayName": "Hairline Grey", "canonical": "#dcdedb" },
+      "ink": { "role": "neutral", "displayName": "Soft Ink Black", "canonical": "#151513" },
+      "ink-soft": { "role": "neutral", "displayName": "Ink at 62%", "canonical": "rgb(21 21 19 / 62%)" },
+      "proof": { "role": "primary", "displayName": "Proof-Mark Red", "canonical": "#c1341c" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero wordmark only, capped at 6rem." },
+      "label": { "displayName": "Label / Mono", "purpose": "Subtitle, footer colophon, per-piece hover index. The system's only secondary text role." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out-strong", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Entrances and hover settle." },
+      { "name": "ease-in-out-strong", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "Reserved for on-screen movement/morphing, not yet used." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Gallery Item",
+      "kind": "custom",
+      "refersTo": "gallery-hover-mark",
+      "description": "Grid cell holding one grabado; hover reveals a drawn registration-mark icon and a mono index label.",
+      "html": "<figure class=\"ds-gallery-item\"><img class=\"ds-gallery-image\" src=\"/grabado-1.jpg\" alt=\"Grabado n.º 1\" /><div class=\"ds-gallery-mark\"><svg class=\"ds-reg-mark\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M12 1v6M12 17v6M1 12h6M17 12h6\" stroke=\"currentColor\" stroke-width=\"1\"/></svg><span class=\"ds-gallery-index\">N.01</span></div></figure>",
+      "css": ".ds-gallery-item { position: relative; overflow: hidden; background: rgba(21,21,19,0.05); } .ds-gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform 260ms cubic-bezier(0.23,1,0.32,1), filter 260ms cubic-bezier(0.23,1,0.32,1); } .ds-gallery-mark { position: absolute; inset: 10px; opacity: 0; transition: opacity 200ms ease-out; pointer-events: none; } .ds-reg-mark { position: absolute; top: 0; left: 0; width: 16px; height: 16px; color: #c1341c; } .ds-gallery-index { position: absolute; right: 0; bottom: 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #f6f7f6; mix-blend-mode: difference; } @media (hover: hover) and (pointer: fine) { .ds-gallery-item:hover .ds-gallery-image { transform: scale(1.035); filter: brightness(1.04); } .ds-gallery-item:hover .ds-gallery-mark { opacity: 1; } }"
+    },
+    {
+      "name": "Footer Link",
+      "kind": "custom",
+      "refersTo": "footer-link",
+      "description": "The single Instagram link in the colophon footer.",
+      "html": "<a class=\"ds-footer-link\" href=\"https://instagram.com/deniseloguercio_-\">@deniseloguercio_-</a>",
+      "css": ".ds-footer-link { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #151513; text-decoration: underline; text-decoration-color: #dcdedb; text-underline-offset: 4px; transition: color 150ms ease-out, transform 150ms ease-out; } .ds-footer-link:hover { color: #c1341c; text-decoration-color: #c1341c; } .ds-footer-link:active { transform: scale(0.97); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Registration Grid",
+    "overview": "The system translates the Swiss International Style poster grid through printmaking's own technical vocabulary: registration crosses, crop marks, and edition numbering become the site's typographic and structural language instead of decorative chrome. Cool unprinted-paper white replaces the warm cream this category defaults to; a single proof-mark red is reserved entirely for interaction.",
+    "keyCharacteristics": [
+      "Cool paper-white ground, near-black ink, one restrained proof-red accent used only on interaction.",
+      "Objective grotesque display type (Archivo) paired with a technical mono (JetBrains Mono) for all labels and numbering.",
+      "A strict, asymmetric, dense-packed CSS grid rather than free-flowing masonry.",
+      "Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners.",
+      "Motion is quiet and precise: staggered fade/rise on entrance, a fast registration-mark hover strike on interaction."
+    ],
+    "rules": [
+      { "name": "The One Red Rule", "body": "Proof Red appears only in response to interaction. A page with Proof Red visible at rest is a bug.", "section": "colors" },
+      { "name": "The No-Eyebrow Rule", "body": "Label type never precedes a heading as a kicker. It only follows as a subtitle or stands alone.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "No box-shadow anywhere. Separation comes from whitespace and hairlines only.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep Proof Red exclusive to interactive/active states.",
+      "Do use JetBrains Mono, uppercase, tracked, for every label/numbering role.",
+      "Do keep the gallery grid dense-packed so large/small modules never leave gaps.",
+      "Do gate every hover effect behind (hover: hover) and (pointer: fine)."
+    ],
+    "donts": [
+      "Don't add a kicker/eyebrow label above any heading.",
+      "Don't introduce shadows, gradients, rounded corners, or card chrome.",
+      "Don't let the display wordmark exceed 6rem at any breakpoint.",
+      "Don't invent per-piece titles, prices, or edition data that were not provided."
+    ]
+  }
+}
