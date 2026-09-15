@@ -42,8 +42,10 @@ Single-page (for now) portfolio: hero introduction, a gallery of works, a simple
 
 ## Evidence on Hand
 
-- 9 grabado photographs in `assets/` (grabado-1.jpeg … grabado-9.jpeg), to be optimized and served from `public/`.
-- No other copy, bio, press, or testimonials on hand.
+- 9 grabado photographs in `assets/` (grabado-1.jpeg … grabado-9.jpeg), optimized and served from `public/` in the gallery.
+- 2 more grabado photographs have since appeared in `assets/` (grabado-10.jpeg, grabado-11.jpeg) but are not yet in the gallery — flagged for the user, not added unasked.
+- 4 studio photographs (`assets/carrousel-1.jpeg` … `carrousel-4.jpeg`, served from `public/`) of the artist at work — pressing prints, the studio itself, holding a plate. Used in the "Sobre la Artista" carousel.
+- No written bio, press, or testimonials on hand.
 
 ## Product Principles
 

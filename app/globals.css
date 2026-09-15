@@ -185,6 +185,29 @@ html {
   }
 }
 
+.carousel-control {
+  transition:
+    background-color 200ms var(--ease-out-strong),
+    border-color 200ms var(--ease-out-strong),
+    opacity 200ms var(--ease-out-strong),
+    transform 160ms var(--ease-out-strong);
+}
+
+.carousel-control:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .carousel-control {
+    opacity: 0.85;
+  }
+
+  .carousel-control:hover {
+    opacity: 1;
+    border-color: var(--proof);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

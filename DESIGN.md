@@ -59,7 +59,7 @@ Confirmed visual rejection: no cream/ivory grounds, no soft serif "artist templa
 - Cool paper-white ground, near-black ink, one restrained proof-red accent used only on interaction.
 - Objective grotesque display type (Archivo) paired with a technical mono (JetBrains Mono) for all labels and numbering.
 - A true masonry column layout — every plate shown complete, at its own aspect ratio, never cropped and never letterboxed.
-- Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners.
+- Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners — with one deliberate, narrow exception: `backdrop-blur` on the Studio Carousel's controls, for legibility over a photo, never as ambient decoration.
 - Motion is quiet and precise: the wordmark wipes in like ink rolled onto paper, everything else staggers in with a plain fade/rise, hover is a fast registration-mark strike.
 
 ## Colors
@@ -113,7 +113,7 @@ Single scrolling page under a fixed nav bar: compact hero → dense asymmetric g
 - **Hero:** no forced viewport height — the section sizes to its content (name, subtitle, hairline rule) with `pt-24`→`pt-32` top padding to clear the fixed nav, and a modest bottom padding so the gallery's first row is visible without scrolling on most screens. Generous horizontal padding (`px-6` mobile → `px-14` desktop) persists; the whitespace economy moved from "tall empty hero" to "tight nav + short hero."
 - **Shared container.** Nav, Hero, Gallery, About, and Footer all wrap their content in `mx-auto max-w-[1800px]` plus the exact same horizontal padding scale (`px-6` → `sm:px-10` → `md:px-14`), so their left/right edges align on every breakpoint *and* on very large monitors — beyond ~1912px wide, the content column centers instead of stretching edge to edge indefinitely. This is load-bearing: never give one section a different outer max-width, a different padding scale, or apply the container classes directly to an element that is itself a flex item of a `flex`/`flex-col` parent (`mx-auto` cancels flex `stretch` sizing there — wrap the content in its own inner `div` instead, the way Gallery/About/Footer/Hero all do).
 - **Gallery.** True masonry via CSS multi-column: `columns-1` → `sm:columns-2` → `md:columns-3` → `lg:columns-4`, `gap-6` (24px, the one gutter in the system as wide as the macro whitespace elsewhere — a masonry gutter has to read as air, not a registration hairline). Each plate is a `break-inside-avoid` figure with `mb-6`; the image itself is `next/image` with its real `width`/`height` (from `lib/artworks.ts`) and `w-full h-auto` — no `fill`, no forced aspect-ratio, no `object-cover`. Columns use the browser default `column-fill: balance`; do not override it to `auto` — without an explicit container height `auto` pours every item into the first column and leaves the rest empty (verified, not a hypothetical). Balance mode's ragged, unequal-height column bottoms are correct masonry behavior, not a bug to chase.
-- **About:** a single heading + one status line under it; no forced bio copy (none was supplied — see PRODUCT.md's Evidence on Hand). Same horizontal padding rhythm as the other sections.
+- **About:** heading + status line on the left, the Studio Carousel on the right (`md:flex-row`, stacked on mobile). No forced bio copy (none was supplied — see PRODUCT.md's Evidence on Hand). Same horizontal padding rhythm as the other sections.
 - **Footer:** simple flex row (stacks on mobile), colophon line left, Instagram link right.
 
 ## Elevation & Depth
@@ -122,6 +122,8 @@ Flat by design — no shadows anywhere in the system. Depth is conveyed entirely
 
 ### Named Rules
 **The Flat-By-Default Rule.** No `box-shadow` anywhere. Separation comes from whitespace and hairlines only.
+
+**The Legibility-Glass Exception.** `backdrop-blur` exists in exactly one place: the Studio Carousel's controls, which sit directly on top of a photograph whose tone is unpredictable. This is legibility, not decoration — glass earns its place only where a control must stay readable over genuinely variable content underneath it, never as an ambient "premium" texture on a surface that could just as well be solid. It never gets rounded corners or a shadow (that would be importing the whole iOS material, not solving the contrast problem), and it's built from the system's own `paper`/`paper-line` tokens at partial opacity, not a new white/black pulled from outside the palette — so it still reads as this system's glass, calibrated in, not a borrowed one pasted on.
 
 ## Shapes
 
@@ -155,6 +157,13 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Hover:** text and underline shift to Proof Red.
 - **Active:** `scale(0.97)` press feedback.
 
+### Studio Carousel (signature component)
+- **Purpose:** portrait photos of the artist at work, in the About section, next to the (currently placeholder) bio text.
+- **Frame:** `aspect-[4/5]`, `object-cover`, sharp corners, no border — the one place in the system a photo (not a plate) is deliberately cropped to a fixed shape, since these are documentary photos, not the artwork itself; The Whole Plate Rule governs grabados, not this.
+- **Controls:** prev/next chevrons and a "01 / 04" index chip, all in the Legibility-Glass treatment (`backdrop-blur-md`, `bg-paper/30`, `border-paper-line/50`) — translucent enough to always sit on the photo without a solid patch, opaque enough to stay readable regardless of what's underneath. Rest opacity 0.85, hover/focus → opacity 1 + border shifts to Proof Red (the same interactive-accent cue as everywhere else), press → `scale(0.92)`.
+- **Motion:** slides cross-fade with a small directional slide (28px, 450ms, `--ease-in-out-strong`) driven by `AnimatePresence`; direction is tracked so next/prev always slide the correct way. The carousel itself fades/rises in on scroll like the gallery figures.
+- **Interaction:** click/tap the chevrons, drag/swipe the photo (`drag="x"`, snaps back outside a velocity/distance threshold), or arrow keys when focused. No autoplay — this is browsed, not performed at the visitor.
+
 ### Theme Toggle (signature component)
 - **Icon:** the registration mark again — the toggle draws its state from the same vocabulary as the hover mark and the Lightbox close control, never a sun/moon glyph. A center dot fills in (`RegistrationMark active`) when dark mode is on — the mark reads as "struck"/registered, empty when not.
 - **Position:** left cell of the nav's 3-column grid (see Layout), always at a fixed `h-9 w-9`, so it never competes with or displaces the centered link group at any width.
@@ -176,6 +185,7 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Do** draw every icon (registration mark, chevron, close control) as SVG paths in the system's own stroke weight — never a Unicode glyph or emoji standing in for one.
 - **Do** build any new themed element on the `--paper`/`--ink`/`--paper-line`/`--ink-soft`/`--proof` tokens so dark mode is automatic — never a hardcoded hex outside the token set.
 - **Do** keep the Lightbox on its own fixed `--scrim`/`--scrim-text`/`--scrim-accent` tokens; it stays dark in both themes by design.
+- **Do** build `backdrop-blur`/glass from the existing `paper`/`paper-line` tokens at partial opacity if you ever add another instance — never a bare `bg-white/30` or `bg-black/30` pulled from outside the palette.
 
 ### Don't:
 - **Don't** add a kicker/eyebrow label above any heading.
@@ -187,3 +197,6 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Don't** use a sun/moon icon (or any icon outside the registration-mark family) for the theme toggle.
 - **Don't** derive the default theme from `prefers-color-scheme` — default is always Paper/light until the user explicitly toggles.
 - **Don't** filter, invert, or otherwise recolor an artwork image for any theme — confirmed and reverted once already; see The Untouched Plate Rule.
+- **Don't** add `backdrop-blur`/glass anywhere else in the system "to match" the carousel controls — it is a legibility fix for one specific case (a control over unpredictable photo content), not a texture the rest of the site earns. A glass card floating over the flat paper ground is exactly the borrowed-material failure The Flat-By-Default Rule exists to block.
+- **Don't** round the corners or add a shadow to the carousel's glass controls — that would import the whole iOS-glass material instead of solving the one contrast problem it exists for.
+- **Don't** crop a grabado plate to a fixed aspect ratio the way the Studio Carousel crops its photos — the carousel photos are documentary, not the artwork; The Whole Plate Rule still governs every grabado.
