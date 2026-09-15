@@ -11,9 +11,9 @@ export function Gallery() {
   return (
     <section
       id="galeria"
-      className="border-t border-paper-line px-6 py-3 sm:px-10 sm:py-4 md:px-14 md:py-6"
+      className="border-t border-paper-line py-3 sm:py-4 md:py-6"
     >
-      <div className="grid grid-flow-row-dense auto-rows-[26vw] grid-cols-2 gap-3 sm:auto-rows-[20vw] md:auto-rows-[15vw] md:grid-cols-4 md:gap-4">
+      <div className="mx-auto grid max-w-[1800px] grid-flow-row-dense auto-rows-[26vw] grid-cols-2 gap-3 px-6 sm:auto-rows-[20vw] sm:px-10 md:auto-rows-[15vw] md:grid-cols-4 md:gap-4 md:px-14">
         {artworks.map((artwork, index) => {
           const isLarge = artwork.size === "lg";
           return (
