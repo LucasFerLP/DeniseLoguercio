@@ -29,9 +29,9 @@
       "name": "Gallery Item",
       "kind": "custom",
       "refersTo": "gallery-hover-mark",
-      "description": "Grid cell holding one grabado, clickable to open the Lightbox; hover reveals a drawn registration-mark icon and a mono index label. Image is object-contain inside a padded mat so the plate is never cropped.",
-      "html": "<figure class=\"ds-gallery-item\"><button class=\"ds-gallery-trigger\" aria-label=\"Ver Grabado n.º 1 en pantalla completa\"><span class=\"ds-gallery-mat\"><img class=\"ds-gallery-image\" src=\"/grabado-1.jpg\" alt=\"Grabado n.º 1\" /></span></button><div class=\"ds-gallery-mark\"><svg class=\"ds-reg-mark\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M12 1v6M12 17v6M1 12h6M17 12h6\" stroke=\"currentColor\" stroke-width=\"1\"/></svg><span class=\"ds-gallery-index\">N.01</span></div></figure>",
-      "css": ".ds-gallery-item { position: relative; overflow: hidden; background: #f6f7f6; } .ds-gallery-trigger { position: absolute; inset: 0; width: 100%; height: 100%; padding: 8px; cursor: pointer; } .ds-gallery-mat { position: relative; display: block; width: 100%; height: 100%; } .ds-gallery-image { width: 100%; height: 100%; object-fit: contain; transition: transform 260ms cubic-bezier(0.23,1,0.32,1), filter 260ms cubic-bezier(0.23,1,0.32,1); } .ds-gallery-mark { position: absolute; inset: 10px; opacity: 0; transition: opacity 200ms ease-out; pointer-events: none; } .ds-reg-mark { position: absolute; top: 0; left: 0; width: 16px; height: 16px; color: #c1341c; } .ds-gallery-index { position: absolute; right: 0; bottom: 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(21 21 19 / 62%); } @media (hover: hover) and (pointer: fine) { .ds-gallery-item:hover .ds-gallery-image { transform: scale(1.035); filter: brightness(1.04); } .ds-gallery-item:hover .ds-gallery-mark { opacity: 1; } }"
+      "description": "Masonry figure holding one grabado at its own natural aspect ratio (w-full h-auto, no crop, no fill), clickable to open the Lightbox; hover reveals a drawn registration-mark icon and a mono index label.",
+      "html": "<figure class=\"ds-gallery-item\"><button class=\"ds-gallery-trigger\" aria-label=\"Ver Grabado n.º 1 en pantalla completa\"><img class=\"ds-gallery-image\" src=\"/grabado-1.jpg\" alt=\"Grabado n.º 1\" /></button><div class=\"ds-gallery-mark\"><svg class=\"ds-reg-mark\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M12 1v6M12 17v6M1 12h6M17 12h6\" stroke=\"currentColor\" stroke-width=\"1\"/></svg><span class=\"ds-gallery-index\">N.01</span></div></figure>",
+      "css": ".ds-gallery-item { position: relative; overflow: hidden; break-inside: avoid; margin-bottom: 24px; background: #f6f7f6; } .ds-gallery-trigger { display: block; width: 100%; cursor: pointer; } .ds-gallery-image { display: block; width: 100%; height: auto; transition: transform 260ms cubic-bezier(0.23,1,0.32,1), filter 260ms cubic-bezier(0.23,1,0.32,1); } .ds-gallery-mark { position: absolute; inset: 10px; opacity: 0; transition: opacity 200ms ease-out; pointer-events: none; } .ds-reg-mark { position: absolute; top: 0; left: 0; width: 16px; height: 16px; color: #c1341c; } .ds-gallery-index { position: absolute; right: 0; bottom: 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #f6f7f6; mix-blend-mode: difference; } @media (hover: hover) and (pointer: fine) { .ds-gallery-item:hover .ds-gallery-image { transform: scale(1.035); filter: brightness(1.04); } .ds-gallery-item:hover .ds-gallery-mark { opacity: 1; } }"
     },
     {
       "name": "Lightbox",
@@ -60,11 +60,11 @@
   ],
   "narrative": {
     "northStar": "Registration Grid",
-    "overview": "The system translates the Swiss International Style poster grid through printmaking's own technical vocabulary: registration crosses, crop marks, and edition numbering become the site's typographic and structural language instead of decorative chrome. Cool unprinted-paper white replaces the warm cream this category defaults to; a single proof-mark red is reserved entirely for interaction.",
+    "overview": "The system carries printmaking's own technical vocabulary — registration crosses, crop marks, edition numbering — as the site's typographic and interaction language instead of decorative chrome. Cool unprinted-paper white replaces the warm cream this category defaults to; a single proof-mark red is reserved entirely for interaction. The gallery is a true CSS-column masonry, each plate shown complete at its own aspect ratio; the original strict modular grid was replaced once its fixed cells forced a crop/letterbox trade-off the brief rejected outright.",
     "keyCharacteristics": [
       "Cool paper-white ground, near-black ink, one restrained proof-red accent used only on interaction.",
       "Objective grotesque display type (Archivo) paired with a technical mono (JetBrains Mono) for all labels and numbering.",
-      "A strict, asymmetric, dense-packed CSS grid rather than free-flowing masonry.",
+      "A true masonry column layout — every plate shown complete, at its own aspect ratio, never cropped.",
       "Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners.",
       "Motion is quiet and precise: staggered fade/rise on entrance, a fast registration-mark hover strike on interaction."
     ],
@@ -72,21 +72,22 @@
       { "name": "The One Red Rule", "body": "Proof Red appears only in response to interaction. A page with Proof Red visible at rest is a bug.", "section": "colors" },
       { "name": "The No-Eyebrow Rule", "body": "Label type never precedes a heading as a kicker. It only follows as a subtitle or stands alone.", "section": "typography" },
       { "name": "The Flat-By-Default Rule", "body": "No box-shadow anywhere. Separation comes from whitespace and hairlines only.", "section": "elevation" },
-      { "name": "The Whole Plate Rule", "body": "A grabado is never cropped to fit a cell. Cells are object-contain inside a padded mat, and the mat's presence is the cost of that promise, not a bug to hide.", "section": "components" }
+      { "name": "The Whole Plate Rule", "body": "A grabado is never cropped to fit a cell. The layout (masonry column width, figure height) adapts to the plate's real aspect ratio, never the other way around.", "section": "components" }
     ],
     "dos": [
       "Do keep Proof Red exclusive to interactive/active states.",
       "Do use JetBrains Mono, uppercase, tracked, for every label/numbering role.",
-      "Do keep the gallery grid dense-packed so large/small/tall modules never leave gaps.",
+      "Do let masonry balance mode produce a ragged, unequal-height column bottom — that is correct, not a bug.",
       "Do gate every hover effect behind (hover: hover) and (pointer: fine).",
-      "Do show every plate at object-contain, full and uncropped, in both the grid and the Lightbox."
+      "Do show every plate complete and uncropped (real width/height, w-full h-auto) in both the grid and the Lightbox."
     ],
     "donts": [
       "Don't add a kicker/eyebrow label above any heading.",
       "Don't introduce shadows, gradients, rounded corners, or card chrome.",
       "Don't let the display wordmark exceed 6rem at any breakpoint.",
       "Don't invent per-piece titles, prices, or edition data that were not provided.",
-      "Don't crop a plate (object-cover) anywhere, grid or Lightbox, to make it fit a shape."
+      "Don't crop a plate (object-cover) anywhere, grid or Lightbox, to make it fit a shape.",
+      "Don't set column-fill: auto on the gallery container without an explicit height — it collapses every item into the first column."
     ]
   }
 }

@@ -21,8 +21,7 @@ typography:
     letterSpacing: "0.08em – 0.14em"
     fontFeature: "uppercase"
 spacing:
-  gallery-gutter: "12px"
-  gallery-gutter-md: "16px"
+  gallery-gutter: "24px"
 components:
   gallery-hover-mark:
     textColor: "{colors.proof}"
@@ -42,14 +41,16 @@ components:
 
 **Creative North Star: "Registration Grid"**
 
-The system translates the Swiss International Style poster grid — one disciplined module ordering a series — through printmaking's own technical vocabulary: registration crosses, crop marks, and edition numbering become the site's typographic and structural language instead of decorative chrome. The premise is that a printmaker's website should read like an object from the print world, not a generic portfolio template. Cool unprinted-paper white replaces the warm cream/ivory that this category defaults to; a single proof-mark red is reserved entirely for the active/hover state, never used decoratively. The grid is strict and asymmetric by design (large plates paired with stacked smaller ones), never an arbitrary Pinterest masonry.
+The system carries printmaking's own technical vocabulary — registration crosses, crop marks, and edition numbering — as the site's typographic and interaction language instead of decorative chrome. The premise is that a printmaker's website should read like an object from the print world, not a generic portfolio template. Cool unprinted-paper white replaces the warm cream/ivory that this category defaults to; a single proof-mark red is reserved entirely for the active/hover state, never used decoratively.
+
+The gallery itself is a true masonry (CSS multi-column, `break-inside-avoid`), each plate shown at its own natural aspect ratio with zero cropping — a deliberate revision of the system's original strict modular grid, made when that grid's fixed cells forced letterboxing/cropping trade-offs the brief explicitly rejected. The registration-mark vocabulary, the reserved accent, and the flat hairline language are what "Registration Grid" actually names; the literal grid mechanism is not the point and was swapped out once it stopped serving the plates.
 
 Confirmed visual rejection: no cream/ivory grounds, no soft serif "artist template" display type, no decorative kicker/eyebrow labels, no card chrome (shadows, rounded corners) anywhere in the system.
 
 **Key Characteristics:**
 - Cool paper-white ground, near-black ink, one restrained proof-red accent used only on interaction.
 - Objective grotesque display type (Archivo) paired with a technical mono (JetBrains Mono) for all labels and numbering.
-- A strict, asymmetric CSS grid (dense-packed, large/small module rhythm) rather than free-flowing masonry.
+- A true masonry column layout — every plate shown complete, at its own aspect ratio, never cropped and never letterboxed.
 - Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners.
 - Motion is quiet and precise: staggered fade/rise on entrance, a fast registration-mark hover strike on interaction.
 
@@ -90,8 +91,7 @@ Single scrolling page under a fixed nav bar: compact hero → dense asymmetric g
 - **Nav:** fixed to the viewport top, `h-14` mobile / `h-16` desktop, solid Paper background with a Paper Line bottom hairline, `z-50`. Links are centered as a group at every breakpoint (mobile and desktop alike). `html` carries `scroll-padding-top: 4rem` so anchor jumps never land under the bar.
 - **Hero:** no forced viewport height — the section sizes to its content (name, subtitle, hairline rule) with `pt-24`→`pt-32` top padding to clear the fixed nav, and a modest bottom padding so the gallery's first row is visible without scrolling on most screens. Generous horizontal padding (`px-6` mobile → `px-14` desktop) persists; the whitespace economy moved from "tall empty hero" to "tight nav + short hero."
 - **Shared container.** Nav, Hero, Gallery, About, and Footer all wrap their content in `mx-auto max-w-[1800px]` plus the exact same horizontal padding scale (`px-6` → `sm:px-10` → `md:px-14`), so their left/right edges align on every breakpoint *and* on very large monitors — beyond ~1912px wide, the content column centers instead of stretching edge to edge indefinitely. This is load-bearing: never give one section a different outer max-width, a different padding scale, or apply the container classes directly to an element that is itself a flex item of a `flex`/`flex-col` parent (`mx-auto` cancels flex `stretch` sizing there — wrap the content in its own inner `div` instead, the way Gallery/About/Footer/Hero all do).
-- **Gallery:** CSS grid, `grid-flow-row-dense`, 2 columns on mobile → 4 columns from `md` (768px) up. Items are one of three module shapes — `sm` (1×1), `tall` (1×2, for portrait-oriented plates), `lg` (2×2) — assigned per artwork to roughly match its own aspect ratio; dense packing closes every gap automatically. Row height is viewport-relative (`26vw` mobile → `15vw` desktop). The *inner* gap between images stays tight (12px → 16px, a technical registration gap) — only the inner gutter is tighter than the macro whitespace elsewhere, never the outer margin.
-- **Gallery image mat.** Every cell reserves an 8px (12px from `sm`) inset around the artwork — a `<button>` padding, not the image's own margin — and the image sits inside it at `object-contain`. The plate is never cropped; the reserved inset reads as a paper mat/passe-partout, consistent with how prints are actually framed. Module shape is chosen to *minimize* visible mat, never to justify cropping.
+- **Gallery.** True masonry via CSS multi-column: `columns-1` → `sm:columns-2` → `md:columns-3` → `lg:columns-4`, `gap-6` (24px, the one gutter in the system as wide as the macro whitespace elsewhere — a masonry gutter has to read as air, not a registration hairline). Each plate is a `break-inside-avoid` figure with `mb-6`; the image itself is `next/image` with its real `width`/`height` (from `lib/artworks.ts`) and `w-full h-auto` — no `fill`, no forced aspect-ratio, no `object-cover`. Columns use the browser default `column-fill: balance`; do not override it to `auto` — without an explicit container height `auto` pours every item into the first column and leaves the rest empty (verified, not a hypothetical). Balance mode's ragged, unequal-height column bottoms are correct masonry behavior, not a bug to chase.
 - **About:** a single heading + one status line under it; no forced bio copy (none was supplied — see PRODUCT.md's Evidence on Hand). Same horizontal padding rhythm as the other sections.
 - **Footer:** simple flex row (stacks on mobile), colophon line left, Instagram link right.
 
@@ -109,8 +109,8 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 ## Components
 
 ### Gallery Item (signature component)
-- **Shape:** hard-edged rectangle, `object-fit: contain` inside a padded mat (see Layout), no radius, no border at rest. The whole cell is a `<button>` — clicking any plate opens it in the Lightbox.
-- **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04 over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label (solid Ink Soft — it sits in the paper mat, not over the artwork, so no blend-mode trick is needed) fades in bottom-right. Both use plain CSS transitions, gated behind `@media (hover: hover) and (pointer: fine)` so touch devices never get a false sticky hover.
+- **Shape:** no fixed box at all — the figure is exactly the size of the plate it holds (`w-full h-auto`, real aspect ratio), no radius, no border at rest. The whole figure is a `<button>` — clicking any plate opens it in the Lightbox.
+- **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04 over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label (Paper, `mix-blend-mode: difference` so it stays legible over any artwork, light or dark) fades in bottom-right. Both use plain CSS transitions, gated behind `@media (hover: hover) and (pointer: fine)` so touch devices never get a false sticky hover.
 - **Entrance:** fades/rises in (`opacity 0→1`, `y 24→0`) on scroll, once, staggered by up to ~180ms across the visible batch.
 
 ### Lightbox (signature component)
@@ -142,9 +142,9 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 ### Do:
 - **Do** keep Proof Red exclusive to interactive/active states.
 - **Do** use JetBrains Mono, uppercase, tracked, for every label/numbering role — never for body prose (there is none).
-- **Do** keep the gallery grid dense-packed (`grid-flow-row-dense`) so `lg`/`tall`/`sm` modules never leave gaps.
+- **Do** let the masonry columns produce a ragged bottom edge; balance mode's unequal column heights are the correct output, not a layout bug.
 - **Do** gate every hover effect behind `(hover: hover) and (pointer: fine)`.
-- **Do** show every plate at `object-contain`, full and uncropped, in both the grid and the Lightbox — the padded mat is the cost of that promise, not a defect.
+- **Do** show every plate complete and uncropped — real `width`/`height`, `w-full h-auto`, never `fill` or a forced `aspect-ratio` — in both the grid and the Lightbox.
 - **Do** draw every icon (registration mark, chevron, close control) as SVG paths in the system's own stroke weight — never a Unicode glyph or emoji standing in for one.
 
 ### Don't:
@@ -152,4 +152,5 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Don't** introduce shadows, gradients, rounded corners, or card chrome — the system is flat and rectangular by commitment.
 - **Don't** let the display wordmark exceed `6rem` at any breakpoint.
 - **Don't** invent per-piece titles, prices, or edition data — none was provided; the numbering shown (N.01…N.09) is a display index, not claimed edition data.
-- **Don't** crop a plate (`object-cover`) anywhere to make it fit a cell or a viewport — resize the cell/module, never the image.
+- **Don't** crop a plate (`object-cover`) anywhere to make it fit a cell or a viewport — the layout adapts to the plate, never the other way around.
+- **Don't** set `column-fill: auto` on the gallery's column container without also giving it an explicit height — verified to collapse every item into the first column.
