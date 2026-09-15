@@ -29,7 +29,7 @@ export function Gallery() {
               ease: easeOutStrong,
               delay: (index % 4) * 0.06,
             }}
-            className="gallery-figure relative mb-6 break-inside-avoid overflow-hidden bg-paper"
+            className="gallery-figure relative mb-6 break-inside-avoid overflow-hidden bg-[#f6f7f6]"
           >
             <button
               type="button"

@@ -87,7 +87,8 @@
       { "name": "The No-Eyebrow Rule", "body": "Label type never precedes a heading as a kicker. It only follows as a subtitle or stands alone.", "section": "typography" },
       { "name": "The Flat-By-Default Rule", "body": "No box-shadow anywhere. Separation comes from whitespace and hairlines only.", "section": "elevation" },
       { "name": "The Whole Plate Rule", "body": "A grabado is never cropped to fit a cell. The layout (masonry column width, figure height) adapts to the plate's real aspect ratio, never the other way around.", "section": "components" },
-      { "name": "The Fixed Scrim Rule", "body": "The Lightbox stays dark in both themes — it uses its own fixed scrim/scrim-text/scrim-accent tokens, never the theme-swapped paper/ink/proof.", "section": "colors" }
+      { "name": "The Fixed Scrim Rule", "body": "The Lightbox stays dark in both themes — it uses its own fixed scrim/scrim-text/scrim-accent tokens, never the theme-swapped paper/ink/proof.", "section": "colors" },
+      { "name": "The Untouched Plate Rule", "body": "Theme never alters a plate's color: no invert, no hue/color filter, in either mode. Tried inverting artwork to a literal photographic negative in dark mode and reversed it — the artwork's real colors (paper white, ink black) are non-negotiable; only the surrounding ground changes.", "section": "components" }
     ],
     "dos": [
       "Do keep Proof Red exclusive to interactive/active states.",
@@ -96,7 +97,7 @@
       "Do gate every hover effect behind (hover: hover) and (pointer: fine).",
       "Do show every plate complete and uncropped (real width/height, w-full h-auto) in both the grid and the Lightbox.",
       "Do build every themed element on the paper/ink/paper-line/ink-soft/proof tokens so dark mode is automatic.",
-      "Do invert artwork images (filter: invert(1)) in dark mode, in both the grid and the Lightbox, identically."
+      "Do render every artwork image in its true scanned colors (paper white, ink black) in both themes — the dark ground is what changes, never the plate."
     ],
     "donts": [
       "Don't add a kicker/eyebrow label above any heading.",
@@ -106,7 +107,8 @@
       "Don't crop a plate (object-cover) anywhere, grid or Lightbox, to make it fit a shape.",
       "Don't set column-fill: auto on the gallery container without an explicit height — it collapses every item into the first column.",
       "Don't use a sun/moon icon for the theme toggle — it's the registration mark, active state shown by the filled center dot.",
-      "Don't derive the default theme from prefers-color-scheme — default is always light until the user toggles."
+      "Don't derive the default theme from prefers-color-scheme — default is always light until the user toggles.",
+      "Don't filter, invert, or recolor an artwork image for any theme — confirmed and reverted once already."
     ]
   }
 }

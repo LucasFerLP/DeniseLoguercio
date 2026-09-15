@@ -82,15 +82,10 @@ html {
 }
 
 .gallery-image {
-  filter: invert(0);
-  transition:
-    transform 260ms var(--ease-out-strong),
-    filter 300ms var(--ease-out-strong);
-}
-
-.dark .gallery-image {
-  /* "Negativo": prints read as white ink on black in dark mode. */
-  filter: invert(1);
+  /* Artwork always renders in its true colors (paper white, ink black) —
+     never inverted or filtered, in either theme. The dark ground around
+     it is what changes, not the plate itself. */
+  transition: transform 260ms var(--ease-out-strong), filter 260ms var(--ease-out-strong);
 }
 
 .gallery-mark {
@@ -102,10 +97,6 @@ html {
   .gallery-figure:hover .gallery-image {
     transform: scale(1.035);
     filter: brightness(1.04);
-  }
-
-  .dark .gallery-figure:hover .gallery-image {
-    filter: invert(1) brightness(1.08);
   }
 
   .gallery-figure:hover .gallery-mark {
@@ -150,15 +141,6 @@ html {
   .nav-link:hover::after {
     transform: scaleX(1);
   }
-}
-
-.lightbox-plate {
-  filter: invert(0);
-  transition: filter 300ms var(--ease-out-strong);
-}
-
-.dark .lightbox-plate {
-  filter: invert(1);
 }
 
 .lightbox-control {

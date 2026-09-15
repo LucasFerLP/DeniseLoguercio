@@ -83,11 +83,13 @@ Two neutrals and one reserved accent; the accent's rarity is the entire point.
 The whole system is one set of semantic tokens (`--paper`, `--paper-line`, `--ink`, `--ink-soft`, `--proof`), not two hardcoded palettes. A `.dark` class on `<html>`, toggled by the nav's `ThemeToggle`, redefines those five CSS custom properties; every component already reads them (`bg-paper`, `text-ink`, etc.), so nothing else has to know a theme exists. Persisted to `localStorage` (`theme: 'light' | 'dark'`), applied before paint by a `beforeInteractive` `next/script` in the root layout so there is no flash. Default is Paper/light — the toggle never reads `prefers-color-scheme`; only an explicit prior click switches it.
 
 - **Dark values:** Paper → `#121210` (not pure black), Ink → `#f6f7f6`, Paper Line → `rgb(246 247 246 / 14%)`, Ink Soft → `rgb(246 247 246 / 64%)`, Proof → `#ff5a3c` (brightened — the light-mode `#c1341c` only reads ~3.3:1 on the dark ground, short of the 4.5:1 text needs; `#ff5a3c` clears ~5.9:1).
-- **Artwork:** every grabado gets `filter: invert(1)` in dark mode (plus a touch more brightness on hover) — ink-on-paper becomes light-on-dark, the literal photographic "negative" the mode is named for. Applied identically in the gallery and the Lightbox so the two never disagree.
-- **The gallery hover index label is the one place that must NOT use the theme token.** `mix-blend-mode: difference` needs a source color that is always light regardless of theme (difference against near-black is a no-op — the label would vanish in dark mode). It's hardcoded `#f6f7f6`, not `text-ink`/`text-paper`.
+- **The name is about the *surface*, not the plates.** "Negativo" names the flip of the site's own paper/ink — the artwork itself never gets a filter, an invert, or any other color alteration, in either theme. A grabado is paper-white and ink-black exactly as scanned; the point of dark mode is that ground now reads as a dark gallery wall the plate hangs on, not that the print itself changes. This was tried the other way (inverting the plate to a literal photographic negative) and reversed — the artwork's real colors are non-negotiable, full stop.
+- **The gallery hover index label is the one place that must NOT use the theme token.** `mix-blend-mode: difference` needs a source color that is always light regardless of theme (difference against near-black is a no-op — the label would vanish in dark mode). It's hardcoded `#f6f7f6`, not `text-ink`/`text-paper`. This is unrelated to the plate itself, which (per the rule above) is never touched.
 
 ### Named Rules
 **The Fixed Scrim Rule.** The Lightbox is a deliberately dark image-viewing surface in *both* themes — it does not swap with the page. It uses its own fixed tokens (`--scrim` `#121210`, `--scrim-text` `rgb(246 247 246 / 70%)`, `--scrim-accent` `#ff5a3c`), never `--paper`/`--ink`/`--proof`.
+
+**The Untouched Plate Rule.** Theme never alters a plate's color — no invert, no hue/color filter, in either mode. The existing hover micro-lift (`brightness(1.04)`, a pre-existing interaction cue, not a theme effect) is the one exception and applies identically regardless of theme.
 
 ## Typography
 
@@ -129,13 +131,13 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 
 ### Gallery Item (signature component)
 - **Shape:** no fixed box at all — the figure is exactly the size of the plate it holds (`w-full h-auto`, real aspect ratio), no radius, no border at rest. The whole figure is a `<button>` — clicking any plate opens it in the Lightbox.
-- **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04 (1.08 in dark mode, to stay visible against an already-inverted plate) over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label fades in bottom-right, `mix-blend-mode: difference` against a hardcoded `#f6f7f6` (see Theme — this one can't use the theme token) so it stays legible over any artwork in either theme.
+- **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04, identically in both themes (see The Untouched Plate Rule), over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label fades in bottom-right, `mix-blend-mode: difference` against a hardcoded `#f6f7f6` (see Theme — this one can't use the theme token) so it stays legible over any artwork.
 - **Entrance:** fades/rises in (`opacity 0→1`, `y 24→0`) on scroll, once, staggered by up to ~180ms across the visible batch.
 
 ### Lightbox (signature component)
 - **Purpose:** full plate viewing on click, keyboard (←/→/Esc) and touch navigable, one at a time.
 - **Backdrop:** solid `bg-scrim` (fixed dark, both themes — see Theme above), no blur/glass. Justified because it is a protected-focus, image-viewing state (not a decorative modal). Click anywhere outside the plate closes it.
-- **Plate:** `object-contain`, capped at `88vw`/`80vh` (`85vh` from `sm`), never cropped, real `width`/`height` passed to `next/image` from `lib/artworks.ts` to avoid layout shift. Carries the same `dark:invert` "Negativo" treatment as the grid, keyed off the *site* theme, not the lightbox's own (always-dark) backdrop.
+- **Plate:** `object-contain`, capped at `88vw`/`80vh` (`85vh` from `sm`), never cropped, real `width`/`height` passed to `next/image` from `lib/artworks.ts` to avoid layout shift. Rendered in its true colors regardless of theme (see The Untouched Plate Rule) — the fixed dark `scrim` behind it is what makes it pop, not a filter on the image.
 - **Close control:** the same drawn registration-mark glyph as the gallery hover mark, in `scrim-accent`, top-right, with a small "CERRAR — ESC" mono caption beneath it in `scrim-text` — the control language stays inside the system's own vocabulary rather than borrowing a generic "×" glyph.
 - **Prev/Next:** drawn chevron SVGs (never a Unicode arrow), `scrim-text` at rest brightening to `scrim-accent` on hover/focus, positioned at the vertical center of the left/right edges; wrap around at the ends.
 - **Index label:** bottom-left, "N.0X" in `scrim-text`, the same numbering as the hover mark — the lightbox is a zoomed continuation of the grid, not a different vocabulary.
@@ -182,3 +184,4 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Don't** set `column-fill: auto` on the gallery's column container without also giving it an explicit height — verified to collapse every item into the first column.
 - **Don't** use a sun/moon icon (or any icon outside the registration-mark family) for the theme toggle.
 - **Don't** derive the default theme from `prefers-color-scheme` — default is always Paper/light until the user explicitly toggles.
+- **Don't** filter, invert, or otherwise recolor an artwork image for any theme — confirmed and reverted once already; see The Untouched Plate Rule.

@@ -83,7 +83,7 @@ export function Lightbox({
               height={artwork.height}
               sizes="90vw"
               priority
-              className="lightbox-plate block max-h-[80vh] w-auto max-w-[88vw] object-contain sm:max-h-[85vh]"
+              className="block max-h-[80vh] w-auto max-w-[88vw] object-contain sm:max-h-[85vh]"
             />
           </motion.div>
 
