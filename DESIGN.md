@@ -90,7 +90,8 @@ Single scrolling page under a fixed nav bar: compact hero → dense asymmetric g
 - **Nav:** fixed to the viewport top, `h-14` mobile / `h-16` desktop, solid Paper background with a Paper Line bottom hairline, `z-50`. Links are centered as a group at every breakpoint (mobile and desktop alike). `html` carries `scroll-padding-top: 4rem` so anchor jumps never land under the bar.
 - **Hero:** no forced viewport height — the section sizes to its content (name, subtitle, hairline rule) with `pt-24`→`pt-32` top padding to clear the fixed nav, and a modest bottom padding so the gallery's first row is visible without scrolling on most screens. Generous horizontal padding (`px-6` mobile → `px-14` desktop) persists; the whitespace economy moved from "tall empty hero" to "tight nav + short hero."
 - **Shared container.** Nav, Hero, Gallery, About, and Footer all wrap their content in `mx-auto max-w-[1800px]` plus the exact same horizontal padding scale (`px-6` → `sm:px-10` → `md:px-14`), so their left/right edges align on every breakpoint *and* on very large monitors — beyond ~1912px wide, the content column centers instead of stretching edge to edge indefinitely. This is load-bearing: never give one section a different outer max-width, a different padding scale, or apply the container classes directly to an element that is itself a flex item of a `flex`/`flex-col` parent (`mx-auto` cancels flex `stretch` sizing there — wrap the content in its own inner `div` instead, the way Gallery/About/Footer/Hero all do).
-- **Gallery:** CSS grid, `grid-flow-row-dense`, 2 columns on mobile → 4 columns from `md` (768px) up. Items are either 1×1 ("small") or 2×2 ("small span doubled", i.e. "large") in grid units; dense packing closes every gap automatically. Row height is viewport-relative (`26vw` mobile → `15vw` desktop) so cells stay near-square regardless of width. The *inner* gap between images stays tight (12px → 16px, a technical registration gap) — only the inner gutter is tighter than the macro whitespace elsewhere, never the outer margin.
+- **Gallery:** CSS grid, `grid-flow-row-dense`, 2 columns on mobile → 4 columns from `md` (768px) up. Items are one of three module shapes — `sm` (1×1), `tall` (1×2, for portrait-oriented plates), `lg` (2×2) — assigned per artwork to roughly match its own aspect ratio; dense packing closes every gap automatically. Row height is viewport-relative (`26vw` mobile → `15vw` desktop). The *inner* gap between images stays tight (12px → 16px, a technical registration gap) — only the inner gutter is tighter than the macro whitespace elsewhere, never the outer margin.
+- **Gallery image mat.** Every cell reserves an 8px (12px from `sm`) inset around the artwork — a `<button>` padding, not the image's own margin — and the image sits inside it at `object-contain`. The plate is never cropped; the reserved inset reads as a paper mat/passe-partout, consistent with how prints are actually framed. Module shape is chosen to *minimize* visible mat, never to justify cropping.
 - **About:** a single heading + one status line under it; no forced bio copy (none was supplied — see PRODUCT.md's Evidence on Hand). Same horizontal padding rhythm as the other sections.
 - **Footer:** simple flex row (stacks on mobile), colophon line left, Instagram link right.
 
@@ -108,9 +109,19 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 ## Components
 
 ### Gallery Item (signature component)
-- **Shape:** hard-edged rectangle, `object-fit: cover`, no radius, no border at rest.
-- **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04 over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label (mix-blend-difference, so it reads on any artwork) fades in bottom-right. Both use plain CSS transitions, gated behind `@media (hover: hover) and (pointer: fine)` so touch devices never get a false sticky hover.
+- **Shape:** hard-edged rectangle, `object-fit: contain` inside a padded mat (see Layout), no radius, no border at rest. The whole cell is a `<button>` — clicking any plate opens it in the Lightbox.
+- **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04 over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label (solid Ink Soft — it sits in the paper mat, not over the artwork, so no blend-mode trick is needed) fades in bottom-right. Both use plain CSS transitions, gated behind `@media (hover: hover) and (pointer: fine)` so touch devices never get a false sticky hover.
 - **Entrance:** fades/rises in (`opacity 0→1`, `y 24→0`) on scroll, once, staggered by up to ~180ms across the visible batch.
+
+### Lightbox (signature component)
+- **Purpose:** full plate viewing on click, keyboard (←/→/Esc) and touch navigable, one at a time.
+- **Backdrop:** solid Ink, no blur/glass — the one deliberately dark surface in an otherwise flat-paper system, justified because it is a protected-focus, image-viewing state (not a decorative modal). Click anywhere outside the plate closes it.
+- **Plate:** `object-contain`, capped at `88vw`/`80vh` (`85vh` from `sm`), never cropped, real `width`/`height` passed to `next/image` from `lib/artworks.ts` to avoid layout shift.
+- **Close control:** the same drawn registration-mark glyph as the gallery hover mark, in Proof Red, top-right, with a small "CERRAR — ESC" mono caption beneath it — the control language stays inside the system's own vocabulary rather than borrowing a generic "×" glyph.
+- **Prev/Next:** drawn chevron SVGs (never a Unicode arrow), Paper at 70% opacity at rest brightening to Proof Red on hover/focus, positioned at the vertical center of the left/right edges; wrap around at the ends.
+- **Index label:** bottom-left, "N.0X" in Paper at 70%, the same numbering as the hover mark — the lightbox is a zoomed continuation of the grid, not a different vocabulary.
+- **Motion:** backdrop fades (`opacity`, 250ms); the plate itself enters/exits from `scale(0.97)` + fade (300ms, `cubic-bezier(0.23, 1, 0.32, 1)`) — never `scale(0)`. Driven by Motion's `AnimatePresence` since this is a mount/unmount transition.
+- **Behavior:** traps body scroll while open, moves focus to the close control on open and returns it to the triggering plate's button on close, closes on `Escape` or a backdrop click (not on a click on the plate itself).
 
 ### Nav Link (signature component)
 - **Style:** Ink text, Label typography, no underline at rest.
@@ -131,11 +142,14 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 ### Do:
 - **Do** keep Proof Red exclusive to interactive/active states.
 - **Do** use JetBrains Mono, uppercase, tracked, for every label/numbering role — never for body prose (there is none).
-- **Do** keep the gallery grid dense-packed (`grid-flow-row-dense`) so large/small modules never leave gaps.
+- **Do** keep the gallery grid dense-packed (`grid-flow-row-dense`) so `lg`/`tall`/`sm` modules never leave gaps.
 - **Do** gate every hover effect behind `(hover: hover) and (pointer: fine)`.
+- **Do** show every plate at `object-contain`, full and uncropped, in both the grid and the Lightbox — the padded mat is the cost of that promise, not a defect.
+- **Do** draw every icon (registration mark, chevron, close control) as SVG paths in the system's own stroke weight — never a Unicode glyph or emoji standing in for one.
 
 ### Don't:
 - **Don't** add a kicker/eyebrow label above any heading.
 - **Don't** introduce shadows, gradients, rounded corners, or card chrome — the system is flat and rectangular by commitment.
 - **Don't** let the display wordmark exceed `6rem` at any breakpoint.
 - **Don't** invent per-piece titles, prices, or edition data — none was provided; the numbering shown (N.01…N.09) is a display index, not claimed edition data.
+- **Don't** crop a plate (`object-cover`) anywhere to make it fit a cell or a viewport — resize the cell/module, never the image.

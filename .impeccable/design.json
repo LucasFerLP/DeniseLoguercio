@@ -29,9 +29,17 @@
       "name": "Gallery Item",
       "kind": "custom",
       "refersTo": "gallery-hover-mark",
-      "description": "Grid cell holding one grabado; hover reveals a drawn registration-mark icon and a mono index label.",
-      "html": "<figure class=\"ds-gallery-item\"><img class=\"ds-gallery-image\" src=\"/grabado-1.jpg\" alt=\"Grabado n.º 1\" /><div class=\"ds-gallery-mark\"><svg class=\"ds-reg-mark\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M12 1v6M12 17v6M1 12h6M17 12h6\" stroke=\"currentColor\" stroke-width=\"1\"/></svg><span class=\"ds-gallery-index\">N.01</span></div></figure>",
-      "css": ".ds-gallery-item { position: relative; overflow: hidden; background: rgba(21,21,19,0.05); } .ds-gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform 260ms cubic-bezier(0.23,1,0.32,1), filter 260ms cubic-bezier(0.23,1,0.32,1); } .ds-gallery-mark { position: absolute; inset: 10px; opacity: 0; transition: opacity 200ms ease-out; pointer-events: none; } .ds-reg-mark { position: absolute; top: 0; left: 0; width: 16px; height: 16px; color: #c1341c; } .ds-gallery-index { position: absolute; right: 0; bottom: 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #f6f7f6; mix-blend-mode: difference; } @media (hover: hover) and (pointer: fine) { .ds-gallery-item:hover .ds-gallery-image { transform: scale(1.035); filter: brightness(1.04); } .ds-gallery-item:hover .ds-gallery-mark { opacity: 1; } }"
+      "description": "Grid cell holding one grabado, clickable to open the Lightbox; hover reveals a drawn registration-mark icon and a mono index label. Image is object-contain inside a padded mat so the plate is never cropped.",
+      "html": "<figure class=\"ds-gallery-item\"><button class=\"ds-gallery-trigger\" aria-label=\"Ver Grabado n.º 1 en pantalla completa\"><span class=\"ds-gallery-mat\"><img class=\"ds-gallery-image\" src=\"/grabado-1.jpg\" alt=\"Grabado n.º 1\" /></span></button><div class=\"ds-gallery-mark\"><svg class=\"ds-reg-mark\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M12 1v6M12 17v6M1 12h6M17 12h6\" stroke=\"currentColor\" stroke-width=\"1\"/></svg><span class=\"ds-gallery-index\">N.01</span></div></figure>",
+      "css": ".ds-gallery-item { position: relative; overflow: hidden; background: #f6f7f6; } .ds-gallery-trigger { position: absolute; inset: 0; width: 100%; height: 100%; padding: 8px; cursor: pointer; } .ds-gallery-mat { position: relative; display: block; width: 100%; height: 100%; } .ds-gallery-image { width: 100%; height: 100%; object-fit: contain; transition: transform 260ms cubic-bezier(0.23,1,0.32,1), filter 260ms cubic-bezier(0.23,1,0.32,1); } .ds-gallery-mark { position: absolute; inset: 10px; opacity: 0; transition: opacity 200ms ease-out; pointer-events: none; } .ds-reg-mark { position: absolute; top: 0; left: 0; width: 16px; height: 16px; color: #c1341c; } .ds-gallery-index { position: absolute; right: 0; bottom: 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(21 21 19 / 62%); } @media (hover: hover) and (pointer: fine) { .ds-gallery-item:hover .ds-gallery-image { transform: scale(1.035); filter: brightness(1.04); } .ds-gallery-item:hover .ds-gallery-mark { opacity: 1; } }"
+    },
+    {
+      "name": "Lightbox",
+      "kind": "custom",
+      "refersTo": "lightbox",
+      "description": "Full-screen plate viewer opened by clicking a gallery item. Ink backdrop, object-contain plate, registration-mark close control, drawn chevrons for prev/next.",
+      "html": "<div class=\"ds-lightbox\" role=\"dialog\" aria-modal=\"true\"><img class=\"ds-lightbox-plate\" src=\"/grabado-1.jpg\" alt=\"Grabado n.º 1\" /><span class=\"ds-lightbox-index\">N.01</span><button class=\"ds-lightbox-close\" aria-label=\"Cerrar\"><svg viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"12\" cy=\"12\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M12 1v6M12 17v6M1 12h6M17 12h6\" stroke=\"currentColor\" stroke-width=\"1\"/></svg><span>Cerrar — Esc</span></button><button class=\"ds-lightbox-nav\" style=\"left:24px\" aria-label=\"Anterior\"><svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M15 4 7 12l8 8\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></button><button class=\"ds-lightbox-nav\" style=\"right:24px;transform:translateY(-50%) rotate(180deg)\" aria-label=\"Siguiente\"><svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M15 4 7 12l8 8\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></button></div>",
+      "css": ".ds-lightbox { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; background: #151513; padding: 40px; } .ds-lightbox-plate { display: block; max-height: 85vh; max-width: 88vw; width: auto; object-fit: contain; } .ds-lightbox-index { position: absolute; bottom: 40px; left: 40px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: rgb(246 247 246 / 70%); text-transform: uppercase; } .ds-lightbox-close { position: absolute; top: 32px; right: 32px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #c1341c; } .ds-lightbox-close svg { width: 32px; height: 32px; } .ds-lightbox-close span { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(246 247 246 / 70%); text-transform: uppercase; } .ds-lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); color: rgb(246 247 246 / 70%); padding: 12px; } .ds-lightbox-nav svg { width: 24px; height: 24px; } .ds-lightbox-close:hover, .ds-lightbox-nav:hover { color: #c1341c; }"
     },
     {
       "name": "Footer Link",
@@ -63,19 +71,22 @@
     "rules": [
       { "name": "The One Red Rule", "body": "Proof Red appears only in response to interaction. A page with Proof Red visible at rest is a bug.", "section": "colors" },
       { "name": "The No-Eyebrow Rule", "body": "Label type never precedes a heading as a kicker. It only follows as a subtitle or stands alone.", "section": "typography" },
-      { "name": "The Flat-By-Default Rule", "body": "No box-shadow anywhere. Separation comes from whitespace and hairlines only.", "section": "elevation" }
+      { "name": "The Flat-By-Default Rule", "body": "No box-shadow anywhere. Separation comes from whitespace and hairlines only.", "section": "elevation" },
+      { "name": "The Whole Plate Rule", "body": "A grabado is never cropped to fit a cell. Cells are object-contain inside a padded mat, and the mat's presence is the cost of that promise, not a bug to hide.", "section": "components" }
     ],
     "dos": [
       "Do keep Proof Red exclusive to interactive/active states.",
       "Do use JetBrains Mono, uppercase, tracked, for every label/numbering role.",
-      "Do keep the gallery grid dense-packed so large/small modules never leave gaps.",
-      "Do gate every hover effect behind (hover: hover) and (pointer: fine)."
+      "Do keep the gallery grid dense-packed so large/small/tall modules never leave gaps.",
+      "Do gate every hover effect behind (hover: hover) and (pointer: fine).",
+      "Do show every plate at object-contain, full and uncropped, in both the grid and the Lightbox."
     ],
     "donts": [
       "Don't add a kicker/eyebrow label above any heading.",
       "Don't introduce shadows, gradients, rounded corners, or card chrome.",
       "Don't let the display wordmark exceed 6rem at any breakpoint.",
-      "Don't invent per-piece titles, prices, or edition data that were not provided."
+      "Don't invent per-piece titles, prices, or edition data that were not provided.",
+      "Don't crop a plate (object-cover) anywhere, grid or Lightbox, to make it fit a shape."
     ]
   }
 }

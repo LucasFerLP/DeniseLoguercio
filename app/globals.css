@@ -121,6 +121,32 @@ html {
   }
 }
 
+.lightbox-control {
+  transition:
+    color 200ms var(--ease-out-strong),
+    opacity 200ms var(--ease-out-strong),
+    transform 160ms var(--ease-out-strong);
+}
+
+.lightbox-control:active {
+  transform: scale(0.94);
+}
+
+.lightbox-control:has(svg):focus-visible {
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lightbox-control {
+    opacity: 0.75;
+  }
+
+  .lightbox-control:hover {
+    opacity: 1;
+    color: var(--proof);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
