@@ -60,7 +60,7 @@ Confirmed visual rejection: no cream/ivory grounds, no soft serif "artist templa
 - Objective grotesque display type (Archivo) paired with a technical mono (JetBrains Mono) for all labels and numbering.
 - A true masonry column layout — every plate shown complete, at its own aspect ratio, never cropped and never letterboxed.
 - Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners.
-- Motion is quiet and precise: staggered fade/rise on entrance, a fast registration-mark hover strike on interaction.
+- Motion is quiet and precise: the wordmark wipes in like ink rolled onto paper, everything else staggers in with a plain fade/rise, hover is a fast registration-mark strike.
 
 ## Colors
 
@@ -161,7 +161,9 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Behavior:** `aria-pressed` reflects state; `title`/`aria-label` say what clicking does next ("Negativo" / "Cambiar a modo claro"), not what the icon is.
 
 ### Hero Entrance (signature motion)
-- Wordmark, subtitle, and baseline rule fade/rise in with a ~120ms stagger, `duration: 0.7s`, easing `cubic-bezier(0.23, 1, 0.32, 1)`. The baseline rule additionally grows in from `scaleX(0)` (`transform-origin: left`) over 0.9s. Respects `prefers-reduced-motion` via `MotionConfig reducedMotion="user"`.
+- **Wordmark:** a `clip-path` wipe, `inset(0 100% 0 0)` → `inset(0 0% 0 0)`, 700ms, `cubic-bezier(0.77, 0, 0.175, 1)` (`--ease-in-out-strong`) — the name is set left-to-right like ink rolled onto paper by a brayer, not faded in. This is the one place `--ease-in-out-strong` is used: a wipe is an on-screen sweep, not a simple appear, so it takes the "moving/morphing" curve rather than `--ease-out-strong`. Deliberately a single technique, not layered with an opacity fade — mixing the two reads as muddy, not more sophisticated.
+- Subtitle and baseline rule fade/rise in ~120ms after, `duration: 0.7s`, `--ease-out-strong`. The rule additionally grows in from `scaleX(0)` (`transform-origin: left`) over 0.9s.
+- **Reduced motion:** `MotionConfig reducedMotion="user"` auto-neutralizes transform-based variants (the subtitle/rule's `y`/`scaleX`) but does *not* touch `clip-path` — it isn't a transform. The wordmark explicitly checks `useReducedMotion()` and swaps to the same plain opacity fade the subtitle uses when the OS prefers reduced motion.
 
 ## Do's and Don'ts
 

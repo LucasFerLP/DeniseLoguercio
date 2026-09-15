@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 const easeOutStrong = [0.23, 1, 0.32, 1] as const;
+const easeInOutStrong = [0.77, 0, 0.175, 1] as const;
 
 const container = {
   hidden: {},
@@ -11,6 +12,17 @@ const container = {
       delayChildren: 0.15,
       staggerChildren: 0.12,
     },
+  },
+};
+
+// The headline is set like ink rolled onto paper: a clip-path wipe,
+// left to right, rather than a fade — one authored moment, not a
+// generic fade-and-rise.
+const rollIn = {
+  hidden: { clipPath: "inset(0 100% 0 0)" },
+  show: {
+    clipPath: "inset(0 0% 0 0)",
+    transition: { duration: 0.7, ease: easeInOutStrong },
   },
 };
 
@@ -33,6 +45,11 @@ const growLine = {
 };
 
 export function Hero() {
+  // clip-path isn't a transform, so MotionConfig's reducedMotion="user"
+  // doesn't neutralize it automatically the way it does the y-based
+  // `rise` variant used elsewhere — fall back to that plain fade here.
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.section
       initial="hidden"
@@ -41,7 +58,7 @@ export function Hero() {
     >
       <div className="mx-auto flex max-w-[1800px] flex-col px-6 pt-24 pb-10 sm:px-10 sm:pt-28 sm:pb-12 md:px-14 md:pt-32">
         <motion.h1
-          variants={rise}
+          variants={reduceMotion ? rise : rollIn}
           className="max-w-5xl text-[13vw] leading-[0.94] font-semibold tracking-[-0.03em] text-ink sm:text-[9vw] md:text-[6rem]"
         >
           Denise

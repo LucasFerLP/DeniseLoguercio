@@ -23,7 +23,7 @@
     "shadows": [],
     "motion": [
       { "name": "ease-out-strong", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Entrances and hover settle." },
-      { "name": "ease-in-out-strong", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "Reserved for on-screen movement/morphing, not yet used." }
+      { "name": "ease-in-out-strong", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "On-screen sweeps/morphs — currently just the Hero wordmark's clip-path wipe entrance." }
     ],
     "breakpoints": [
       { "name": "sm", "value": "640px" },
@@ -56,6 +56,14 @@
       "css": ".ds-theme-toggle { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: #151513; transition: color 200ms cubic-bezier(0.23,1,0.32,1), transform 160ms cubic-bezier(0.23,1,0.32,1); } .ds-theme-toggle svg { width: 20px; height: 20px; } .ds-theme-toggle:active { transform: scale(0.9); } @media (hover: hover) and (pointer: fine) { .ds-theme-toggle:hover { color: #c1341c; } }"
     },
     {
+      "name": "Hero Wordmark Entrance",
+      "kind": "custom",
+      "refersTo": "hero-wordmark",
+      "description": "The name sets in via a left-to-right clip-path wipe (ink rolled onto paper by a brayer), not a fade — the system's one use of ease-in-out-strong. Falls back to a plain opacity fade under prefers-reduced-motion, since clip-path isn't a transform and isn't auto-neutralized by MotionConfig.",
+      "html": "<h1 class=\"ds-hero-wordmark\">Denise<br/>Lo Guercio</h1>",
+      "css": ".ds-hero-wordmark { clip-path: inset(0 100% 0 0); animation: ds-wipe-in 700ms cubic-bezier(0.77,0,0.175,1) 150ms forwards; } @keyframes ds-wipe-in { to { clip-path: inset(0 0% 0 0); } } @media (prefers-reduced-motion: reduce) { .ds-hero-wordmark { clip-path: none; animation: ds-fade-in 700ms ease-out 150ms forwards; opacity: 0; } @keyframes ds-fade-in { to { opacity: 1; } } }"
+    },
+    {
       "name": "Footer Link",
       "kind": "custom",
       "refersTo": "footer-link",
@@ -80,7 +88,7 @@
       "Objective grotesque display type (Archivo) paired with a technical mono (JetBrains Mono) for all labels and numbering.",
       "A true masonry column layout — every plate shown complete, at its own aspect ratio, never cropped.",
       "Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners.",
-      "Motion is quiet and precise: staggered fade/rise on entrance, a fast registration-mark hover strike on interaction."
+      "Motion is quiet and precise: the wordmark wipes in like ink rolled onto paper, everything else staggers in with a plain fade/rise, hover is a fast registration-mark strike."
     ],
     "rules": [
       { "name": "The One Red Rule", "body": "Proof Red appears only in response to interaction. A page with Proof Red visible at rest is a bug.", "section": "colors" },
@@ -88,7 +96,8 @@
       { "name": "The Flat-By-Default Rule", "body": "No box-shadow anywhere. Separation comes from whitespace and hairlines only.", "section": "elevation" },
       { "name": "The Whole Plate Rule", "body": "A grabado is never cropped to fit a cell. The layout (masonry column width, figure height) adapts to the plate's real aspect ratio, never the other way around.", "section": "components" },
       { "name": "The Fixed Scrim Rule", "body": "The Lightbox stays dark in both themes — it uses its own fixed scrim/scrim-text/scrim-accent tokens, never the theme-swapped paper/ink/proof.", "section": "colors" },
-      { "name": "The Untouched Plate Rule", "body": "Theme never alters a plate's color: no invert, no hue/color filter, in either mode. Tried inverting artwork to a literal photographic negative in dark mode and reversed it — the artwork's real colors (paper white, ink black) are non-negotiable; only the surrounding ground changes.", "section": "components" }
+      { "name": "The Untouched Plate Rule", "body": "Theme never alters a plate's color: no invert, no hue/color filter, in either mode. Tried inverting artwork to a literal photographic negative in dark mode and reversed it — the artwork's real colors (paper white, ink black) are non-negotiable; only the surrounding ground changes.", "section": "components" },
+      { "name": "The One Wipe Rule", "body": "The Hero wordmark's clip-path wipe is the system's one signature entrance technique. It is never layered with an opacity fade on the same element — one authored moment reads as sophisticated, two overlapping ones read as muddy.", "section": "motion" }
     ],
     "dos": [
       "Do keep Proof Red exclusive to interactive/active states.",
