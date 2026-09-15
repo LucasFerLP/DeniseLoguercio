@@ -8,7 +8,13 @@
       "paper-line": { "role": "neutral", "displayName": "Hairline Grey", "canonical": "#dcdedb" },
       "ink": { "role": "neutral", "displayName": "Soft Ink Black", "canonical": "#151513" },
       "ink-soft": { "role": "neutral", "displayName": "Ink at 62%", "canonical": "rgb(21 21 19 / 62%)" },
-      "proof": { "role": "primary", "displayName": "Proof-Mark Red", "canonical": "#c1341c" }
+      "proof": { "role": "primary", "displayName": "Proof-Mark Red", "canonical": "#c1341c" },
+      "paper-dark": { "role": "neutral", "displayName": "Cool Paper White (dark-mode value)", "canonical": "#121210" },
+      "ink-dark": { "role": "neutral", "displayName": "Soft Ink Black (dark-mode value)", "canonical": "#f6f7f6" },
+      "proof-dark": { "role": "primary", "displayName": "Proof-Mark Red (dark-mode value, brightened for contrast)", "canonical": "#ff5a3c" },
+      "scrim": { "role": "neutral", "displayName": "Fixed Scrim", "canonical": "#121210" },
+      "scrim-text": { "role": "neutral", "displayName": "Scrim Text", "canonical": "rgb(246 247 246 / 70%)" },
+      "scrim-accent": { "role": "primary", "displayName": "Scrim Accent", "canonical": "#ff5a3c" }
     },
     "typographyMeta": {
       "display": { "displayName": "Display", "purpose": "Hero wordmark only, capped at 6rem." },
@@ -42,6 +48,14 @@
       "css": ".ds-lightbox { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; background: #151513; padding: 40px; } .ds-lightbox-plate { display: block; max-height: 85vh; max-width: 88vw; width: auto; object-fit: contain; } .ds-lightbox-index { position: absolute; bottom: 40px; left: 40px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: rgb(246 247 246 / 70%); text-transform: uppercase; } .ds-lightbox-close { position: absolute; top: 32px; right: 32px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #c1341c; } .ds-lightbox-close svg { width: 32px; height: 32px; } .ds-lightbox-close span { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(246 247 246 / 70%); text-transform: uppercase; } .ds-lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); color: rgb(246 247 246 / 70%); padding: 12px; } .ds-lightbox-nav svg { width: 24px; height: 24px; } .ds-lightbox-close:hover, .ds-lightbox-nav:hover { color: #c1341c; }"
     },
     {
+      "name": "Theme Toggle",
+      "kind": "custom",
+      "refersTo": "theme-toggle",
+      "description": "Nav's dark-mode ('Negativo') switch. Reuses the registration-mark icon (center dot fills when active) rather than a sun/moon glyph. Fixed 36x36 hit target, left cell of the nav's 3-column grid so it never disturbs the centered links.",
+      "html": "<button class=\"ds-theme-toggle\" aria-pressed=\"false\" aria-label=\"Cambiar a negativo (modo oscuro)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M12 1v6M12 17v6M1 12h6M17 12h6\" stroke=\"currentColor\" stroke-width=\"1\"/></svg></button>",
+      "css": ".ds-theme-toggle { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: #151513; transition: color 200ms cubic-bezier(0.23,1,0.32,1), transform 160ms cubic-bezier(0.23,1,0.32,1); } .ds-theme-toggle svg { width: 20px; height: 20px; } .ds-theme-toggle:active { transform: scale(0.9); } @media (hover: hover) and (pointer: fine) { .ds-theme-toggle:hover { color: #c1341c; } }"
+    },
+    {
       "name": "Footer Link",
       "kind": "custom",
       "refersTo": "footer-link",
@@ -72,14 +86,17 @@
       { "name": "The One Red Rule", "body": "Proof Red appears only in response to interaction. A page with Proof Red visible at rest is a bug.", "section": "colors" },
       { "name": "The No-Eyebrow Rule", "body": "Label type never precedes a heading as a kicker. It only follows as a subtitle or stands alone.", "section": "typography" },
       { "name": "The Flat-By-Default Rule", "body": "No box-shadow anywhere. Separation comes from whitespace and hairlines only.", "section": "elevation" },
-      { "name": "The Whole Plate Rule", "body": "A grabado is never cropped to fit a cell. The layout (masonry column width, figure height) adapts to the plate's real aspect ratio, never the other way around.", "section": "components" }
+      { "name": "The Whole Plate Rule", "body": "A grabado is never cropped to fit a cell. The layout (masonry column width, figure height) adapts to the plate's real aspect ratio, never the other way around.", "section": "components" },
+      { "name": "The Fixed Scrim Rule", "body": "The Lightbox stays dark in both themes — it uses its own fixed scrim/scrim-text/scrim-accent tokens, never the theme-swapped paper/ink/proof.", "section": "colors" }
     ],
     "dos": [
       "Do keep Proof Red exclusive to interactive/active states.",
       "Do use JetBrains Mono, uppercase, tracked, for every label/numbering role.",
       "Do let masonry balance mode produce a ragged, unequal-height column bottom — that is correct, not a bug.",
       "Do gate every hover effect behind (hover: hover) and (pointer: fine).",
-      "Do show every plate complete and uncropped (real width/height, w-full h-auto) in both the grid and the Lightbox."
+      "Do show every plate complete and uncropped (real width/height, w-full h-auto) in both the grid and the Lightbox.",
+      "Do build every themed element on the paper/ink/paper-line/ink-soft/proof tokens so dark mode is automatic.",
+      "Do invert artwork images (filter: invert(1)) in dark mode, in both the grid and the Lightbox, identically."
     ],
     "donts": [
       "Don't add a kicker/eyebrow label above any heading.",
@@ -87,7 +104,9 @@
       "Don't let the display wordmark exceed 6rem at any breakpoint.",
       "Don't invent per-piece titles, prices, or edition data that were not provided.",
       "Don't crop a plate (object-cover) anywhere, grid or Lightbox, to make it fit a shape.",
-      "Don't set column-fill: auto on the gallery container without an explicit height — it collapses every item into the first column."
+      "Don't set column-fill: auto on the gallery container without an explicit height — it collapses every item into the first column.",
+      "Don't use a sun/moon icon for the theme toggle — it's the registration mark, active state shown by the filled center dot.",
+      "Don't derive the default theme from prefers-color-scheme — default is always light until the user toggles."
     ]
   }
 }

@@ -6,8 +6,23 @@
   --ink: #151513;
   --ink-soft: rgb(21 21 19 / 62%);
   --proof: #c1341c;
+
+  /* Fixed — the Lightbox is a deliberately dark viewing scrim in both
+     themes; it never swaps with --paper/--ink. */
+  --scrim: #121210;
+  --scrim-text: rgb(246 247 246 / 70%);
+  --scrim-accent: #ff5a3c;
+
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.dark {
+  --paper: #121210;
+  --paper-line: rgb(246 247 246 / 14%);
+  --ink: #f6f7f6;
+  --ink-soft: rgb(246 247 246 / 64%);
+  --proof: #ff5a3c;
 }
 
 @theme inline {
@@ -16,6 +31,9 @@
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-proof: var(--proof);
+  --color-scrim: var(--scrim);
+  --color-scrim-text: var(--scrim-text);
+  --color-scrim-accent: var(--scrim-accent);
   --font-sans: var(--font-display);
   --font-mono: var(--font-mono);
 }
@@ -27,6 +45,9 @@
 body {
   background-color: var(--paper);
   color: var(--ink);
+  transition:
+    background-color 300ms var(--ease-out-strong),
+    color 300ms var(--ease-out-strong);
 }
 
 ::selection {
@@ -61,9 +82,15 @@ html {
 }
 
 .gallery-image {
+  filter: invert(0);
   transition:
     transform 260ms var(--ease-out-strong),
-    filter 260ms var(--ease-out-strong);
+    filter 300ms var(--ease-out-strong);
+}
+
+.dark .gallery-image {
+  /* "Negativo": prints read as white ink on black in dark mode. */
+  filter: invert(1);
 }
 
 .gallery-mark {
@@ -75,6 +102,10 @@ html {
   .gallery-figure:hover .gallery-image {
     transform: scale(1.035);
     filter: brightness(1.04);
+  }
+
+  .dark .gallery-figure:hover .gallery-image {
+    filter: invert(1) brightness(1.08);
   }
 
   .gallery-figure:hover .gallery-mark {
@@ -121,6 +152,15 @@ html {
   }
 }
 
+.lightbox-plate {
+  filter: invert(0);
+  transition: filter 300ms var(--ease-out-strong);
+}
+
+.dark .lightbox-plate {
+  filter: invert(1);
+}
+
 .lightbox-control {
   transition:
     color 200ms var(--ease-out-strong),
@@ -143,6 +183,22 @@ html {
 
   .lightbox-control:hover {
     opacity: 1;
+    color: var(--scrim-accent);
+  }
+}
+
+.theme-toggle {
+  transition:
+    color 200ms var(--ease-out-strong),
+    transform 160ms var(--ease-out-strong);
+}
+
+.theme-toggle:active {
+  transform: scale(0.9);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-toggle:hover {
     color: var(--proof);
   }
 }

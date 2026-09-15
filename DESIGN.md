@@ -7,6 +7,14 @@ colors:
   ink: "#151513"
   ink-soft: "rgb(21 21 19 / 62%)"
   proof: "#c1341c"
+  paper-dark: "#121210"
+  paper-line-dark: "rgb(246 247 246 / 14%)"
+  ink-dark: "#f6f7f6"
+  ink-soft-dark: "rgb(246 247 246 / 64%)"
+  proof-dark: "#ff5a3c"
+  scrim: "#121210"
+  scrim-text: "rgb(246 247 246 / 70%)"
+  scrim-accent: "#ff5a3c"
 typography:
   display:
     fontFamily: "Archivo, Helvetica Neue, Arial, sans-serif"
@@ -70,6 +78,17 @@ Two neutrals and one reserved accent; the accent's rarity is the entire point.
 ### Named Rules
 **The One Red Rule.** Proof Red appears only in response to interaction (hover, active, focus, selection). A page with Proof Red visible at rest is a bug, not a variant.
 
+## Theme ("Negativo")
+
+The whole system is one set of semantic tokens (`--paper`, `--paper-line`, `--ink`, `--ink-soft`, `--proof`), not two hardcoded palettes. A `.dark` class on `<html>`, toggled by the nav's `ThemeToggle`, redefines those five CSS custom properties; every component already reads them (`bg-paper`, `text-ink`, etc.), so nothing else has to know a theme exists. Persisted to `localStorage` (`theme: 'light' | 'dark'`), applied before paint by a `beforeInteractive` `next/script` in the root layout so there is no flash. Default is Paper/light — the toggle never reads `prefers-color-scheme`; only an explicit prior click switches it.
+
+- **Dark values:** Paper → `#121210` (not pure black), Ink → `#f6f7f6`, Paper Line → `rgb(246 247 246 / 14%)`, Ink Soft → `rgb(246 247 246 / 64%)`, Proof → `#ff5a3c` (brightened — the light-mode `#c1341c` only reads ~3.3:1 on the dark ground, short of the 4.5:1 text needs; `#ff5a3c` clears ~5.9:1).
+- **Artwork:** every grabado gets `filter: invert(1)` in dark mode (plus a touch more brightness on hover) — ink-on-paper becomes light-on-dark, the literal photographic "negative" the mode is named for. Applied identically in the gallery and the Lightbox so the two never disagree.
+- **The gallery hover index label is the one place that must NOT use the theme token.** `mix-blend-mode: difference` needs a source color that is always light regardless of theme (difference against near-black is a no-op — the label would vanish in dark mode). It's hardcoded `#f6f7f6`, not `text-ink`/`text-paper`.
+
+### Named Rules
+**The Fixed Scrim Rule.** The Lightbox is a deliberately dark image-viewing surface in *both* themes — it does not swap with the page. It uses its own fixed tokens (`--scrim` `#121210`, `--scrim-text` `rgb(246 247 246 / 70%)`, `--scrim-accent` `#ff5a3c`), never `--paper`/`--ink`/`--proof`.
+
 ## Typography
 
 **Display Font:** Archivo (objective grotesque; weights 400–700 loaded)
@@ -88,7 +107,7 @@ Two neutrals and one reserved accent; the accent's rarity is the entire point.
 
 Single scrolling page under a fixed nav bar: compact hero → dense asymmetric gallery grid → about → colophon footer. No additional routes; every nav link is an in-page anchor.
 
-- **Nav:** fixed to the viewport top, `h-14` mobile / `h-16` desktop, solid Paper background with a Paper Line bottom hairline, `z-50`. Links are centered as a group at every breakpoint (mobile and desktop alike). `html` carries `scroll-padding-top: 4rem` so anchor jumps never land under the bar.
+- **Nav:** fixed to the viewport top, `h-14` mobile / `h-16` desktop, Paper background with a Paper Line bottom hairline, `z-50`. Internally a `grid-cols-[2.25rem_1fr_2.25rem]`: the `ThemeToggle` in the fixed-width left cell, the link group centered in the middle `1fr` cell, and an equal-width empty spacer on the right — the spacer exists purely so the links stay optically centered on the *viewport*, not just the remaining space next to the toggle. Links are centered at every breakpoint. `html` carries `scroll-padding-top: 4rem` so anchor jumps never land under the bar.
 - **Hero:** no forced viewport height — the section sizes to its content (name, subtitle, hairline rule) with `pt-24`→`pt-32` top padding to clear the fixed nav, and a modest bottom padding so the gallery's first row is visible without scrolling on most screens. Generous horizontal padding (`px-6` mobile → `px-14` desktop) persists; the whitespace economy moved from "tall empty hero" to "tight nav + short hero."
 - **Shared container.** Nav, Hero, Gallery, About, and Footer all wrap their content in `mx-auto max-w-[1800px]` plus the exact same horizontal padding scale (`px-6` → `sm:px-10` → `md:px-14`), so their left/right edges align on every breakpoint *and* on very large monitors — beyond ~1912px wide, the content column centers instead of stretching edge to edge indefinitely. This is load-bearing: never give one section a different outer max-width, a different padding scale, or apply the container classes directly to an element that is itself a flex item of a `flex`/`flex-col` parent (`mx-auto` cancels flex `stretch` sizing there — wrap the content in its own inner `div` instead, the way Gallery/About/Footer/Hero all do).
 - **Gallery.** True masonry via CSS multi-column: `columns-1` → `sm:columns-2` → `md:columns-3` → `lg:columns-4`, `gap-6` (24px, the one gutter in the system as wide as the macro whitespace elsewhere — a masonry gutter has to read as air, not a registration hairline). Each plate is a `break-inside-avoid` figure with `mb-6`; the image itself is `next/image` with its real `width`/`height` (from `lib/artworks.ts`) and `w-full h-auto` — no `fill`, no forced aspect-ratio, no `object-cover`. Columns use the browser default `column-fill: balance`; do not override it to `auto` — without an explicit container height `auto` pours every item into the first column and leaves the rest empty (verified, not a hypothetical). Balance mode's ragged, unequal-height column bottoms are correct masonry behavior, not a bug to chase.
@@ -110,16 +129,16 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 
 ### Gallery Item (signature component)
 - **Shape:** no fixed box at all — the figure is exactly the size of the plate it holds (`w-full h-auto`, real aspect ratio), no radius, no border at rest. The whole figure is a `<button>` — clicking any plate opens it in the Lightbox.
-- **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04 over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label (Paper, `mix-blend-mode: difference` so it stays legible over any artwork, light or dark) fades in bottom-right. Both use plain CSS transitions, gated behind `@media (hover: hover) and (pointer: fine)` so touch devices never get a false sticky hover.
+- **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04 (1.08 in dark mode, to stay visible against an already-inverted plate) over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label fades in bottom-right, `mix-blend-mode: difference` against a hardcoded `#f6f7f6` (see Theme — this one can't use the theme token) so it stays legible over any artwork in either theme.
 - **Entrance:** fades/rises in (`opacity 0→1`, `y 24→0`) on scroll, once, staggered by up to ~180ms across the visible batch.
 
 ### Lightbox (signature component)
 - **Purpose:** full plate viewing on click, keyboard (←/→/Esc) and touch navigable, one at a time.
-- **Backdrop:** solid Ink, no blur/glass — the one deliberately dark surface in an otherwise flat-paper system, justified because it is a protected-focus, image-viewing state (not a decorative modal). Click anywhere outside the plate closes it.
-- **Plate:** `object-contain`, capped at `88vw`/`80vh` (`85vh` from `sm`), never cropped, real `width`/`height` passed to `next/image` from `lib/artworks.ts` to avoid layout shift.
-- **Close control:** the same drawn registration-mark glyph as the gallery hover mark, in Proof Red, top-right, with a small "CERRAR — ESC" mono caption beneath it — the control language stays inside the system's own vocabulary rather than borrowing a generic "×" glyph.
-- **Prev/Next:** drawn chevron SVGs (never a Unicode arrow), Paper at 70% opacity at rest brightening to Proof Red on hover/focus, positioned at the vertical center of the left/right edges; wrap around at the ends.
-- **Index label:** bottom-left, "N.0X" in Paper at 70%, the same numbering as the hover mark — the lightbox is a zoomed continuation of the grid, not a different vocabulary.
+- **Backdrop:** solid `bg-scrim` (fixed dark, both themes — see Theme above), no blur/glass. Justified because it is a protected-focus, image-viewing state (not a decorative modal). Click anywhere outside the plate closes it.
+- **Plate:** `object-contain`, capped at `88vw`/`80vh` (`85vh` from `sm`), never cropped, real `width`/`height` passed to `next/image` from `lib/artworks.ts` to avoid layout shift. Carries the same `dark:invert` "Negativo" treatment as the grid, keyed off the *site* theme, not the lightbox's own (always-dark) backdrop.
+- **Close control:** the same drawn registration-mark glyph as the gallery hover mark, in `scrim-accent`, top-right, with a small "CERRAR — ESC" mono caption beneath it in `scrim-text` — the control language stays inside the system's own vocabulary rather than borrowing a generic "×" glyph.
+- **Prev/Next:** drawn chevron SVGs (never a Unicode arrow), `scrim-text` at rest brightening to `scrim-accent` on hover/focus, positioned at the vertical center of the left/right edges; wrap around at the ends.
+- **Index label:** bottom-left, "N.0X" in `scrim-text`, the same numbering as the hover mark — the lightbox is a zoomed continuation of the grid, not a different vocabulary.
 - **Motion:** backdrop fades (`opacity`, 250ms); the plate itself enters/exits from `scale(0.97)` + fade (300ms, `cubic-bezier(0.23, 1, 0.32, 1)`) — never `scale(0)`. Driven by Motion's `AnimatePresence` since this is a mount/unmount transition.
 - **Behavior:** traps body scroll while open, moves focus to the close control on open and returns it to the triggering plate's button on close, closes on `Escape` or a backdrop click (not on a click on the plate itself).
 
@@ -134,6 +153,11 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Hover:** text and underline shift to Proof Red.
 - **Active:** `scale(0.97)` press feedback.
 
+### Theme Toggle (signature component)
+- **Icon:** the registration mark again — the toggle draws its state from the same vocabulary as the hover mark and the Lightbox close control, never a sun/moon glyph. A center dot fills in (`RegistrationMark active`) when dark mode is on — the mark reads as "struck"/registered, empty when not.
+- **Position:** left cell of the nav's 3-column grid (see Layout), always at a fixed `h-9 w-9`, so it never competes with or displaces the centered link group at any width.
+- **Behavior:** `aria-pressed` reflects state; `title`/`aria-label` say what clicking does next ("Negativo" / "Cambiar a modo claro"), not what the icon is.
+
 ### Hero Entrance (signature motion)
 - Wordmark, subtitle, and baseline rule fade/rise in with a ~120ms stagger, `duration: 0.7s`, easing `cubic-bezier(0.23, 1, 0.32, 1)`. The baseline rule additionally grows in from `scaleX(0)` (`transform-origin: left`) over 0.9s. Respects `prefers-reduced-motion` via `MotionConfig reducedMotion="user"`.
 
@@ -146,6 +170,8 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Do** gate every hover effect behind `(hover: hover) and (pointer: fine)`.
 - **Do** show every plate complete and uncropped — real `width`/`height`, `w-full h-auto`, never `fill` or a forced `aspect-ratio` — in both the grid and the Lightbox.
 - **Do** draw every icon (registration mark, chevron, close control) as SVG paths in the system's own stroke weight — never a Unicode glyph or emoji standing in for one.
+- **Do** build any new themed element on the `--paper`/`--ink`/`--paper-line`/`--ink-soft`/`--proof` tokens so dark mode is automatic — never a hardcoded hex outside the token set.
+- **Do** keep the Lightbox on its own fixed `--scrim`/`--scrim-text`/`--scrim-accent` tokens; it stays dark in both themes by design.
 
 ### Don't:
 - **Don't** add a kicker/eyebrow label above any heading.
@@ -154,3 +180,5 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Don't** invent per-piece titles, prices, or edition data — none was provided; the numbering shown (N.01…N.09) is a display index, not claimed edition data.
 - **Don't** crop a plate (`object-cover`) anywhere to make it fit a cell or a viewport — the layout adapts to the plate, never the other way around.
 - **Don't** set `column-fill: auto` on the gallery's column container without also giving it an explicit height — verified to collapse every item into the first column.
+- **Don't** use a sun/moon icon (or any icon outside the registration-mark family) for the theme toggle.
+- **Don't** derive the default theme from `prefers-color-scheme` — default is always Paper/light until the user explicitly toggles.

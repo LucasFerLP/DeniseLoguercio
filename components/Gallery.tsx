@@ -52,7 +52,7 @@ export function Gallery() {
               className="gallery-mark pointer-events-none absolute inset-2.5"
             >
               <RegistrationMark className="absolute top-0 left-0 h-4 w-4 text-proof" />
-              <span className="absolute right-0 bottom-0 font-mono text-[10px] tracking-[0.1em] text-paper mix-blend-difference">
+              <span className="absolute right-0 bottom-0 font-mono text-[10px] tracking-[0.1em] text-[#f6f7f6] mix-blend-difference">
                 N.{String(artwork.id).padStart(2, "0")}
               </span>
             </div>

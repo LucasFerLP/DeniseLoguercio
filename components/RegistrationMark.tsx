@@ -1,4 +1,10 @@
-export function RegistrationMark({ className }: { className?: string }) {
+export function RegistrationMark({
+  className,
+  active,
+}: {
+  className?: string;
+  active?: boolean;
+}) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -8,6 +14,7 @@ export function RegistrationMark({ className }: { className?: string }) {
     >
       <circle cx="12" cy="12" r="7" stroke="currentColor" strokeWidth="1" />
       <path d="M12 1v6M12 17v6M1 12h6M17 12h6" stroke="currentColor" strokeWidth="1" />
+      {active && <circle cx="12" cy="12" r="1.6" fill="currentColor" />}
     </svg>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
 import { MotionConfig } from "motion/react";
+import Script from "next/script";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -21,12 +22,28 @@ export const metadata: Metadata = {
     "Grabados de Denise Lo Guercio. Obra en papel, presentada en su forma original.",
 };
 
+const themeInitScript = `
+  try {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  } catch (e) {}
+`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
+      suppressHydrationWarning
       className={`${archivo.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-paper text-ink">
         <MotionConfig reducedMotion="user">{children}</MotionConfig>
       </body>
