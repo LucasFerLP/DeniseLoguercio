@@ -56,6 +56,8 @@ body {
 
 html {
   scrollbar-color: var(--paper-line) var(--paper);
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
 }
 
 .gallery-image {
@@ -77,6 +79,45 @@ html {
 
   .gallery-figure:hover .gallery-mark {
     opacity: 1;
+  }
+}
+
+.nav-link {
+  position: relative;
+  padding-bottom: 2px;
+  transition:
+    color 220ms var(--ease-out-strong),
+    transform 160ms var(--ease-out-strong);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms var(--ease-out-strong);
+}
+
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.nav-link:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-link:hover {
+    color: var(--proof);
+  }
+
+  .nav-link:hover::after {
+    transform: scaleX(1);
   }
 }
 

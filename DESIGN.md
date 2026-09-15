@@ -16,9 +16,9 @@ typography:
     letterSpacing: "-0.03em"
   label:
     fontFamily: "JetBrains Mono, ui-monospace, monospace"
-    fontSize: "0.75rem"
+    fontSize: "0.625rem – 0.875rem"
     fontWeight: 400
-    letterSpacing: "0.14em"
+    letterSpacing: "0.08em – 0.14em"
     fontFeature: "uppercase"
 spacing:
   gallery-gutter: "12px"
@@ -29,6 +29,10 @@ components:
   footer-link:
     textColor: "{colors.ink}"
   footer-link-hover:
+    textColor: "{colors.proof}"
+  nav-link:
+    textColor: "{colors.ink}"
+  nav-link-hover:
     textColor: "{colors.proof}"
 ---
 
@@ -74,17 +78,19 @@ Two neutrals and one reserved accent; the accent's rarity is the entire point.
 
 ### Hierarchy
 - **Display** (600, `clamp(3rem, 13vw, 6rem)`, line-height 0.94, tracking -0.03em): the hero wordmark only. Capped at 6rem — it never grows past that regardless of viewport.
-- **Label** (400, 0.75rem–0.875rem, tracking 0.14em, uppercase, JetBrains Mono): subtitle under the hero name, footer colophon line, the per-piece "N.0X" hover mark. This is the system's only secondary text role; there is no separate "body" role because the site carries no paragraph copy.
+- **Label** (400, 0.625rem–0.875rem, tracking 0.08em–0.14em, uppercase, JetBrains Mono): subtitle under the hero name, footer colophon line, the nav links, the per-piece "N.0X" hover mark. This is the system's only secondary text role; there is no separate "body" role because the site carries no paragraph copy. The smallest step (10–11px) is reserved for the two tightest contexts — the gallery hover index and the mobile nav bar — never for anything meant to be read at a glance from a distance.
 
 ### Named Rules
 **The No-Eyebrow Rule.** Label type never precedes a heading as a kicker. It only follows (as a subtitle) or stands alone (footer, hover mark).
 
 ## Layout
 
-Single scrolling page: full-height hero → dense asymmetric gallery grid → colophon footer. No nav, no additional routes.
+Single scrolling page under a fixed nav bar: compact hero → dense asymmetric gallery grid → about → colophon footer. No additional routes; every nav link is an in-page anchor.
 
-- **Hero:** `min-h-[92vh]`, content vertically centered, generous padding (`px-6` mobile → `px-14` desktop). A hairline rule anchors the lower third.
+- **Nav:** fixed to the viewport top, `h-14` mobile / `h-16` desktop, solid Paper background with a Paper Line bottom hairline, `z-50`. Links are right-aligned. `html` carries `scroll-padding-top: 4rem` so anchor jumps never land under the bar.
+- **Hero:** no forced viewport height — the section sizes to its content (name, subtitle, hairline rule) with `pt-24`→`pt-32` top padding to clear the fixed nav, and a modest bottom padding so the gallery's first row is visible without scrolling on most screens. Generous horizontal padding (`px-6` mobile → `px-14` desktop) persists; the whitespace economy moved from "tall empty hero" to "tight nav + short hero."
 - **Gallery:** CSS grid, `grid-flow-row-dense`, 2 columns on mobile → 4 columns from `md` (768px) up. Items are either 1×1 ("small") or 2×2 ("small span doubled", i.e. "large") in grid units; dense packing closes every gap automatically. Row height is viewport-relative (`26vw` mobile → `15vw` desktop) so cells stay near-square regardless of width. Gutter is deliberately tight (12px → 16px) — a technical registration gap, distinct from the generous macro whitespace around the hero and footer.
+- **About:** a single heading + one status line under it; no forced bio copy (none was supplied — see PRODUCT.md's Evidence on Hand). Same horizontal padding rhythm as the other sections.
 - **Footer:** simple flex row (stacks on mobile), colophon line left, Instagram link right.
 
 ## Elevation & Depth
@@ -104,6 +110,12 @@ No rounded corners anywhere (`border-radius: 0` throughout, the Tailwind default
 - **Shape:** hard-edged rectangle, `object-fit: cover`, no radius, no border at rest.
 - **Hover (pointer: fine only):** image scales to 1.035 and brightens to 1.04 over 260ms (`cubic-bezier(0.23, 1, 0.32, 1)`); simultaneously a drawn SVG registration mark (circle + cross, Proof Red) fades in at the top-left corner and a mono "N.0X" index label (mix-blend-difference, so it reads on any artwork) fades in bottom-right. Both use plain CSS transitions, gated behind `@media (hover: hover) and (pointer: fine)` so touch devices never get a false sticky hover.
 - **Entrance:** fades/rises in (`opacity 0→1`, `y 24→0`) on scroll, once, staggered by up to ~180ms across the visible batch.
+
+### Nav Link (signature component)
+- **Style:** Ink text, Label typography, no underline at rest.
+- **Hover (pointer: fine only):** text shifts to Proof Red and a 1px underline draws in left-to-right (`scaleX(0)→1`, `transform-origin: left`, 220ms `cubic-bezier(0.23, 1, 0.32, 1)`) — the same "mark strikes in" grammar as the gallery hover mark, applied to type.
+- **Focus-visible:** the underline draws in exactly as on hover, independent of pointer capability, so keyboard users get the same affordance.
+- **Active:** `scale(0.97)` press feedback.
 
 ### Footer Link
 - **Style:** Ink text, Paper Line underline at rest.

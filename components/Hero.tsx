@@ -38,7 +38,7 @@ export function Hero() {
       initial="hidden"
       animate="show"
       variants={container}
-      className="relative flex min-h-[92vh] flex-col justify-center px-6 py-28 sm:px-10 md:px-14"
+      className="flex flex-col px-6 pt-24 pb-10 sm:px-10 sm:pt-28 sm:pb-12 md:px-14 md:pt-32"
     >
       <motion.h1
         variants={rise}
@@ -51,7 +51,7 @@ export function Hero() {
 
       <motion.p
         variants={rise}
-        className="mt-7 font-mono text-xs tracking-[0.14em] text-ink-soft uppercase sm:text-sm"
+        className="mt-6 font-mono text-xs tracking-[0.14em] text-ink-soft uppercase sm:text-sm"
       >
         Portfolio de Arte — Grabados
       </motion.p>
@@ -59,7 +59,7 @@ export function Hero() {
       <motion.div
         variants={growLine}
         style={{ transformOrigin: "left" }}
-        className="absolute right-6 bottom-14 left-6 h-px bg-ink/20 sm:right-10 sm:left-10 md:right-14 md:left-14"
+        className="mt-8 h-px w-full bg-ink/20 sm:mt-10"
       />
     </motion.section>
   );

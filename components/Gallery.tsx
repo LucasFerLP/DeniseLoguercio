@@ -10,7 +10,7 @@ const easeOutStrong = [0.23, 1, 0.32, 1] as const;
 export function Gallery() {
   return (
     <section
-      id="obra"
+      id="galeria"
       className="border-t border-paper-line px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6"
     >
       <div className="grid grid-flow-row-dense auto-rows-[26vw] grid-cols-2 gap-3 sm:auto-rows-[20vw] md:auto-rows-[15vw] md:grid-cols-4 md:gap-4">
