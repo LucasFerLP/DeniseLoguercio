@@ -13,6 +13,11 @@
   --scrim-text: rgb(246 247 246 / 70%);
   --scrim-accent: #ff5a3c;
 
+  /* The Studio Carousel's passepartout: deliberately distinct from
+     --paper (not just the same token again) so the mounted photo
+     reads as a card sitting on the page, not fused with the ground. */
+  --mat: #ffffff;
+
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
 }
@@ -23,6 +28,7 @@
   --ink: #f6f7f6;
   --ink-soft: rgb(246 247 246 / 64%);
   --proof: #ff5a3c;
+  --mat: #1c1c19;
 }
 
 @theme inline {
@@ -34,6 +40,7 @@
   --color-scrim: var(--scrim);
   --color-scrim-text: var(--scrim-text);
   --color-scrim-accent: var(--scrim-accent);
+  --color-mat: var(--mat);
   --font-sans: var(--font-display);
   --font-mono: var(--font-mono);
 }

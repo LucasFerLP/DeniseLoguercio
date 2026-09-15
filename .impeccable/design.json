@@ -14,7 +14,9 @@
       "proof-dark": { "role": "primary", "displayName": "Proof-Mark Red (dark-mode value, brightened for contrast)", "canonical": "#ff5a3c" },
       "scrim": { "role": "neutral", "displayName": "Fixed Scrim", "canonical": "#121210" },
       "scrim-text": { "role": "neutral", "displayName": "Scrim Text", "canonical": "rgb(246 247 246 / 70%)" },
-      "scrim-accent": { "role": "primary", "displayName": "Scrim Accent", "canonical": "#ff5a3c" }
+      "scrim-accent": { "role": "primary", "displayName": "Scrim Accent", "canonical": "#ff5a3c" },
+      "mat": { "role": "neutral", "displayName": "Passepartout Mat", "canonical": "#ffffff" },
+      "mat-dark": { "role": "neutral", "displayName": "Passepartout Mat (dark-mode value)", "canonical": "#1c1c19" }
     },
     "typographyMeta": {
       "display": { "displayName": "Display", "purpose": "Hero wordmark only, capped at 6rem." },
@@ -67,9 +69,9 @@
       "name": "Studio Carousel",
       "kind": "custom",
       "refersTo": "studio-carousel",
-      "description": "Portrait-photo carousel in the About section. The system's one use of backdrop-blur: the prev/next controls and index chip sit on an unpredictable photograph, so a legibility-glass treatment (built from paper/paper-line tokens, not new white/black values) keeps them readable — sharp corners, no shadow, so it stays this system's glass rather than a borrowed iOS material. Photos are object-cover at a fixed aspect ratio (documentary photos, not grabado plates — The Whole Plate Rule doesn't apply here).",
-      "html": "<div class=\"ds-carousel\"><div class=\"ds-carousel-frame\"><img class=\"ds-carousel-photo\" src=\"/carrousel-1.jpg\" alt=\"Denise trabajando en la prensa\" /><button class=\"ds-carousel-control\" style=\"left:12px\" aria-label=\"Anterior\"><svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M15 4 7 12l8 8\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></button><button class=\"ds-carousel-control\" style=\"right:12px;transform:translateY(-50%) rotate(180deg)\" aria-label=\"Siguiente\"><svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M15 4 7 12l8 8\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></button><span class=\"ds-carousel-chip\">01 / 04</span></div></div>",
-      "css": ".ds-carousel-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: rgb(21 21 19 / 8%); } .ds-carousel-photo { width: 100%; height: 100%; object-fit: cover; } .ds-carousel-control { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgb(220 222 219 / 50%); background: rgb(246 247 246 / 30%); backdrop-filter: blur(8px); color: #151513; opacity: 0.85; transition: opacity 200ms cubic-bezier(0.23,1,0.32,1), border-color 200ms cubic-bezier(0.23,1,0.32,1), transform 160ms cubic-bezier(0.23,1,0.32,1); } .ds-carousel-control svg { width: 16px; height: 16px; } .ds-carousel-control:hover { opacity: 1; border-color: #c1341c; } .ds-carousel-control:active { transform: translateY(-50%) scale(0.92); } .ds-carousel-chip { position: absolute; right: 12px; bottom: 12px; z-index: 10; border: 1px solid rgb(220 222 219 / 50%); background: rgb(246 247 246 / 30%); backdrop-filter: blur(8px); padding: 4px 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #151513; text-transform: uppercase; }"
+      "description": "Portrait-photo carousel in the About section. Sits in a solid --mat passepartout card (border + shadow-sm — the system's one shadow) so the photo reads as a mounted print. The prev/next controls sit on the photo itself and use the system's one backdrop-blur (legibility over unpredictable photo tone, built from paper/paper-line tokens). The index ('01 / 04') lives below the mat, unstyled, like a caption/signature — not a badge on the image. Photos are object-cover at a fixed aspect ratio (documentary photos, not grabado plates — The Whole Plate Rule doesn't apply here).",
+      "html": "<div class=\"ds-carousel\"><div class=\"ds-carousel-mat\"><div class=\"ds-carousel-frame\"><img class=\"ds-carousel-photo\" src=\"/carrousel-1.jpg\" alt=\"Denise trabajando en la prensa\" /><button class=\"ds-carousel-control\" style=\"left:12px\" aria-label=\"Anterior\"><svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M15 4 7 12l8 8\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></button><button class=\"ds-carousel-control\" style=\"right:12px;transform:translateY(-50%) rotate(180deg)\" aria-label=\"Siguiente\"><svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M15 4 7 12l8 8\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></button></div></div><span class=\"ds-carousel-index\">01 / 04</span></div>",
+      "css": ".ds-carousel-mat { border: 1px solid #dcdedb; background: #ffffff; padding: 12px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); } .ds-carousel-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: rgb(21 21 19 / 8%); } .ds-carousel-photo { width: 100%; height: 100%; object-fit: cover; } .ds-carousel-control { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgb(220 222 219 / 50%); background: rgb(246 247 246 / 30%); backdrop-filter: blur(8px); color: #151513; opacity: 0.85; transition: opacity 200ms cubic-bezier(0.23,1,0.32,1), border-color 200ms cubic-bezier(0.23,1,0.32,1), transform 160ms cubic-bezier(0.23,1,0.32,1); } .ds-carousel-control svg { width: 16px; height: 16px; } .ds-carousel-control:hover { opacity: 1; border-color: #c1341c; } .ds-carousel-control:active { transform: translateY(-50%) scale(0.92); } .ds-carousel-index { display: block; margin-top: 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: rgb(21 21 19 / 62%); text-transform: uppercase; }"
     },
     {
       "name": "Footer Link",
@@ -95,18 +97,19 @@
       "Cool paper-white ground, near-black ink, one restrained proof-red accent used only on interaction.",
       "Objective grotesque display type (Archivo) paired with a technical mono (JetBrains Mono) for all labels and numbering.",
       "A true masonry column layout — every plate shown complete, at its own aspect ratio, never cropped.",
-      "Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners — one deliberate exception: backdrop-blur on the Studio Carousel's controls, for legibility over a photo, never as decoration.",
+      "Hairline rules stand in for both dividers and depth; no shadows, no gradients, no rounded corners on UI chrome — two deliberate, named exceptions: backdrop-blur on the Studio Carousel's controls (legibility over a photo), and shadow-sm on its passepartout mat (a physical mounted-print reference), neither of which license shadows or glass anywhere else.",
       "Motion is quiet and precise: the wordmark wipes in like ink rolled onto paper, everything else staggers in with a plain fade/rise, hover is a fast registration-mark strike."
     ],
     "rules": [
       { "name": "The One Red Rule", "body": "Proof Red appears only in response to interaction. A page with Proof Red visible at rest is a bug.", "section": "colors" },
       { "name": "The No-Eyebrow Rule", "body": "Label type never precedes a heading as a kicker. It only follows as a subtitle or stands alone.", "section": "typography" },
-      { "name": "The Flat-By-Default Rule", "body": "No box-shadow anywhere. Separation comes from whitespace and hairlines only.", "section": "elevation" },
+      { "name": "The Flat-By-Default Rule", "body": "No box-shadow on UI chrome (nav, buttons, links, gallery grid). Separation there comes from whitespace and hairlines only. The Studio Carousel's mat is the one named exception.", "section": "elevation" },
       { "name": "The Whole Plate Rule", "body": "A grabado is never cropped to fit a cell. The layout (masonry column width, figure height) adapts to the plate's real aspect ratio, never the other way around.", "section": "components" },
       { "name": "The Fixed Scrim Rule", "body": "The Lightbox stays dark in both themes — it uses its own fixed scrim/scrim-text/scrim-accent tokens, never the theme-swapped paper/ink/proof.", "section": "colors" },
       { "name": "The Untouched Plate Rule", "body": "Theme never alters a plate's color: no invert, no hue/color filter, in either mode. Tried inverting artwork to a literal photographic negative in dark mode and reversed it — the artwork's real colors (paper white, ink black) are non-negotiable; only the surrounding ground changes.", "section": "components" },
       { "name": "The One Wipe Rule", "body": "The Hero wordmark's clip-path wipe is the system's one signature entrance technique. It is never layered with an opacity fade on the same element — one authored moment reads as sophisticated, two overlapping ones read as muddy.", "section": "motion" },
-      { "name": "The Legibility-Glass Exception", "body": "backdrop-blur exists in exactly one place: the Studio Carousel's controls, sitting on an unpredictable photo. It's a contrast fix, not decoration, built from paper/paper-line tokens (never a bare white/black), and never gets rounded corners or a shadow — that would import the whole iOS material instead of solving the one problem it exists for.", "section": "elevation" }
+      { "name": "The Legibility-Glass Exception", "body": "backdrop-blur exists in exactly one place: the Studio Carousel's controls, sitting on an unpredictable photo. It's a contrast fix, not decoration, built from paper/paper-line tokens (never a bare white/black), and never gets rounded corners or its own shadow — that would import the whole iOS material instead of solving the one problem it exists for.", "section": "elevation" },
+      { "name": "The Passepartout Exception", "body": "The Studio Carousel's photo sits in a solid --mat card (deliberately not the same value as --paper, so it visibly separates from the page), a hairline border, and one soft shadow-sm — justified because it represents a physical mounted print, not UI chrome. It is the system's only card-with-shadow and licenses nothing else.", "section": "elevation" }
     ],
     "dos": [
       "Do keep Proof Red exclusive to interactive/active states.",
@@ -116,11 +119,12 @@
       "Do show every plate complete and uncropped (real width/height, w-full h-auto) in both the grid and the Lightbox.",
       "Do build every themed element on the paper/ink/paper-line/ink-soft/proof tokens so dark mode is automatic.",
       "Do render every artwork image in its true scanned colors (paper white, ink black) in both themes — the dark ground is what changes, never the plate.",
-      "Do build backdrop-blur/glass from the paper/paper-line tokens at partial opacity, not a bare bg-white/30 or bg-black/30 pulled from outside the palette."
+      "Do build backdrop-blur/glass from the paper/paper-line tokens at partial opacity, not a bare bg-white/30 or bg-black/30 pulled from outside the palette.",
+      "Do use the --mat token (not --paper) for the Studio Carousel's passepartout so the mounted photo visibly separates from the page."
     ],
     "donts": [
       "Don't add a kicker/eyebrow label above any heading.",
-      "Don't introduce shadows, gradients, rounded corners, or card chrome.",
+      "Don't introduce shadows, gradients, rounded corners, or card chrome on UI elements — nav, buttons, links, gallery grid. (The Studio Carousel's mat is the one named exception.)",
       "Don't let the display wordmark exceed 6rem at any breakpoint.",
       "Don't invent per-piece titles, prices, or edition data that were not provided.",
       "Don't crop a plate (object-cover) anywhere, grid or Lightbox, to make it fit a shape.",

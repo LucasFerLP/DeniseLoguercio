@@ -16,4 +16,6 @@ export const artworks: Artwork[] = [
   { id: 7, src: "/grabado-7.jpg", alt: "Grabado n.º 7 de Denise Lo Guercio", width: 1538, height: 1600 },
   { id: 8, src: "/grabado-8.jpg", alt: "Grabado n.º 8 de Denise Lo Guercio", width: 1538, height: 1600 },
   { id: 9, src: "/grabado-9.jpg", alt: "Grabado n.º 9 de Denise Lo Guercio", width: 1538, height: 1600 },
+  { id: 10, src: "/grabado-10.jpg", alt: "Grabado n.º 10 de Denise Lo Guercio", width: 790, height: 1096 },
+  { id: 11, src: "/grabado-11.jpg", alt: "Grabado n.º 11 de Denise Lo Guercio", width: 962, height: 1151 },
 ];
